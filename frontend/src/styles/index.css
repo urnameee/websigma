@@ -1,0 +1,211 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: white;
+  position: relative;
+  z-index: 1000;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: #002B56;
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #002B56;
+  font-weight: bold;
+}
+
+.hamburger {
+  display: none;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 24px;
+  z-index: 1001;
+}
+
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100vh;
+  background-color: white;
+  padding: 2rem;
+  transition: left 0.3s ease-in-out;
+  z-index: 999;
+}
+
+.mobile-menu.active {
+  left: 0; /* Menggeser menu ke kiri untuk menampilkannya */
+}
+
+.mobile-menu .close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.mobile-links {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.mobile-links a {
+  text-decoration: none;
+  color: #002B56;
+  font-size: 18px;
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+  }
+
+  .hamburger {
+    display: block;
+  }
+}
+
+/* Banner container styling */
+.banner-container {
+    position: relative; /* Posisi relatif untuk tombol panah */
+    overflow: hidden; /* Menyembunyikan bagian banner yang tidak terlihat */
+    margin-bottom: -30px; /* Menambahkan jarak 50px antara banner dan UKM */
+}
+
+/* Banner styling */
+.banner {
+    display: none; /* Menyembunyikan banner secara default */
+    text-align: center; /* Menyelaraskan teks di tengah */
+}
+
+/* Styling untuk gambar dalam banner */
+.banner img {
+    width: 100%; /* Lebar gambar 100% dari kontainer */
+    height: auto; /* Tinggi otomatis untuk menjaga proporsi gambar */
+}
+
+/* Menampilkan banner yang aktif */
+.banner.active {
+    display: block; /* Menampilkan banner yang aktif */
+}
+
+/* Tombol panah */
+.arrow {
+    position: absolute; /* Posisi absolut untuk tombol panah */
+    top: 50%; /* Menempatkan tombol di tengah vertikal */
+    transform: translateY(-50%); /* Mengatur posisi tombol ke tengah vertikal */
+    background: rgba(255, 255, 255, 0.7); /* Warna latar belakang dengan transparansi */
+    border: none; /* Menghilangkan border tombol */
+    cursor: pointer; /* Mengubah kursor saat hover */
+    padding: 10px; /* Padding untuk tombol */
+    z-index: 1; /* Agar tombol muncul di atas gambar */
+}
+
+.left-arrow {
+    left: 10px; /* Posisi tombol panah kiri */
+}
+
+.right-arrow {
+    right: 10px; /* Posisi tombol panah kanan */
+}
+
+/* Section container untuk daftar UKM */
+.ukm-section {
+  padding: 50px 20px;
+  background-color: #f9f9f9;
+  text-align: left;
+}
+
+/* Judul dari section */
+.ukm-section h2 {
+  font-size: 2.5em; /* Memperbesar font */
+  margin-bottom: 30px;
+}
+
+/* Grid untuk UKM dengan ukuran yang lebih besar dan responsif */
+.ukm-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Grid responsif, tiap item min. 250px */
+  gap: 30px; /* Jarak antar item */
+  justify-items: center; /* Posisi item di tengah */
+}
+
+/* Desain item UKM */
+.ukm-item {
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Shadow lebih besar untuk efek elegan */
+  width: 100%; /* Lebar penuh sesuai grid */
+  max-width: 300px; /* Maksimal lebar 300px */
+  padding: 20px; /* Padding lebih besar */
+  text-align: center;
+}
+
+/* Gambar logo UKM */
+.ukm-item img {
+  width: 150px; /* Lebih besar */
+  height: 150px;
+  object-fit: contain;
+  margin-bottom: 15px;
+}
+
+/* Judul UKM */
+.ukm-item h3 {
+  font-size: 1.5em; /* Memperbesar judul */
+  margin-bottom: 10px;
+}
+
+/* Deskripsi UKM */
+.ukm-item p {
+  font-size: 1.1em; /* Memperbesar teks deskripsi */
+  color: #666;
+}
+
+/* Responsif untuk layar kecil (mobile) */
+@media (max-width: 768px) {
+  .ukm-item {
+      max-width: 100%; /* Item mengambil lebar penuh pada layar kecil */
+  }
+
+  .ukm-section h2 {
+      font-size: 2em; /* Font judul lebih kecil di layar kecil */
+  }
+
+  .ukm-item img {
+      width: 120px; /* Gambar lebih kecil di mobile */
+      height: 120px;
+  }
+
+  .ukm-item h3 {
+      font-size: 1.3em; /* Ukuran teks sedikit lebih kecil */
+  }
+
+  .ukm-item p {
+      font-size: 1em; /* Ukuran deskripsi lebih kecil di mobile */
+  }
+}

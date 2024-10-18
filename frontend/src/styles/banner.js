@@ -1,27 +1,28 @@
-// Untuk slider otomatis
-let currentSlide = 0;
-const totalSlides = document.querySelectorAll('.banner').length;
-const slider = document.querySelector('.banner-slider');
-const prevButton = document.querySelector('.prev');
-const nextButton = document.querySelector('.next');
+document.addEventListener("DOMContentLoaded", function () {
+    const banners = document.querySelectorAll('.banner');
+    const leftArrow = document.querySelector('.left-arrow');
+    const rightArrow = document.querySelector('.right-arrow');
+    let currentIndex = 0;
 
-function showSlide(index) {
-    const offset = -index * 100; // Menghitung offset
-    slider.style.transform = `translateX(${offset}%)`;
-}
+    // Menampilkan banner pertama
+    banners[currentIndex].classList.add('active');
 
-prevButton.addEventListener('click', () => {
-    currentSlide = (currentSlide > 0) ? currentSlide - 1 : totalSlides - 1;
-    showSlide(currentSlide);
+    function showBanner(index) {
+        banners.forEach((banner, i) => {
+            banner.classList.remove('active'); // Menghapus kelas active dari semua banner
+            if (i === index) {
+                banner.classList.add('active'); // Menambahkan kelas active pada banner yang ditentukan
+            }
+        });
+    }
+
+    leftArrow.addEventListener('click', () => {
+        currentIndex = (currentIndex > 0) ? currentIndex - 1 : banners.length - 1; // Navigasi ke banner sebelumnya
+        showBanner(currentIndex); // Menampilkan banner yang sesuai
+    });
+
+    rightArrow.addEventListener('click', () => {
+        currentIndex = (currentIndex < banners.length - 1) ? currentIndex + 1 : 0; // Navigasi ke banner berikutnya
+        showBanner(currentIndex); // Menampilkan banner yang sesuai
+    });
 });
-
-nextButton.addEventListener('click', () => {
-    currentSlide = (currentSlide < totalSlides - 1) ? currentSlide + 1 : 0;
-    showSlide(currentSlide);
-});
-
-// Slide otomatis setiap 5 detik
-setInterval(() => {
-    currentSlide = (currentSlide < totalSlides - 1) ? currentSlide + 1 : 0;
-    showSlide(currentSlide);
-}, 5000);

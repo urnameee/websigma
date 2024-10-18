@@ -3,84 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIGMA - UKM</title>
-    <link rel="stylesheet" href="\frontend\src\styles/beranda.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+    <title>Banner Slider</title>
+    <link rel="stylesheet" href="/frontend/src/styles/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <header>
-        <div class="container">
-            <div class="header-content">
-                <div class="logos">
-                    <div class="logo">
-                        <img src="\frontend\public\assets/logo-polines.png" alt="Polines Logo">
-                    </div>
-                    <div class="logo">
-                        <img src="\frontend/public/assets/logo-sigma.png" alt="SIGMA Logo">
-                    </div>
-                </div>
-                <nav>
-                    <div class="hamburger" id="hamburger">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </div>
-                    <ul class="nav-menu">
-                        <li><a href="#">Beranda</a></li>
-                        <li><a href="#">Instansi</a></li>
-                        <li><a href="#">UKM</a></li>
-                        <li><a href="#">Profil</a></li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-    </header>
 
-    <div class="container">
-        <div class="banner-container">
-            <div class="banner-slider">
-                <div class="banner" style="background-image: url('/frontend/public/assets/banner1.png');">
-                    
-                </div>
-                <div class="banner" style="background-image: url('//frontend/public/assets/banner1.png');">
-                    2>
-                </div>
-                <div class="banner" style="background-image: url('/frontend/public/assets/banner1.png');">
-                    
-                </div>
-            </div>
-            <button class="banner-nav prev"><i class="fas fa-chevron-left"></i></button>
-            <button class="banner-nav next"><i class="fas fa-chevron-right"></i></button>
+    <!-- Navbar akan dimuat di sini -->
+    
+    <div class="banner-container">
+        <div class="banner">
+            <img src="assets/banner1.png" alt="Banner 1">
         </div>
-
-        <main>
-            <h2>Daftar UKM</h2>
-            <div class="ukm-grid">
-                <div class="ukm-card">
-                    <img src="1.jpg" alt="BEM Logo">
-                    <h3>BEM</h3>
-                    <p>Badan Eksekutif Mahasiswa</p>
-                </div>
-                <div class="ukm-card">
-                    <img src="/api/placeholder/100/100" alt="PP Logo">
-                    <h3>PP</h3>
-                    <p>Pengembangan Pengetahuan</p>
-                </div>
-                <div class="ukm-card">
-                    <img src="/api/placeholder/100/100" alt="PCC Logo">
-                    <h3>PCC</h3>
-                    <p>Polytechnic Computer Club</p>
-                </div>
-                <div class="ukm-card">
-                    <img src="/api/placeholder/100/100" alt="BPM Logo">
-                    <h3>BPM</h3>
-                    <p>Badan Perwakilan Mahasiswa</p>
-                </div>
-            </div>
-        </main>
+        <div class="banner">
+            <img src="assets/banner2.png" alt="Banner 2">
+        </div>
+        <div class="banner">
+            <img src="assets/banner1.png" alt="Banner 3">
+        </div>
+        <button class="arrow left-arrow"><i class="fas fa-chevron-left"></i></button>
+        <button class="arrow right-arrow"><i class="fas fa-chevron-right"></i></button>
     </div>
 
-    <script src="\frontend\src\styles/banner.js"></script>
-    <script src="\frontend\src\styles/menu.js"></script>
+    <div class="ukm-section">
+        <h2>Daftar UKM</h2>
+        <div class="ukm-grid">
+            <div class="ukm-item">
+                <img src="assets/bem-logo.png" alt="BEM">
+                <h3>BEM</h3>
+                <p>Badan Eksekutif Mahasiswa</p>
+            </div>
+            <div class="ukm-item">
+                <img src="assets/pp-logo.png" alt="PP">
+                <h3>PP</h3>
+                <p>Pengembangan Pengetahuan</p>
+            </div>
+            <div class="ukm-item">
+                <img src="assets/pcc-logo.png" alt="PCC">
+                <h3>PCC</h3>
+                <p>Polytechnic Computer Club</p>
+            </div>
+            <div class="ukm-item">
+                <img src="assets/bpm-logo.png" alt="BPM">
+                <h3>BPM</h3>
+                <p>Badan Perwakilan Mahasiswa</p>
+            </div>
+            <div class="ukm-item">
+                <img src="assets/bpm-logo.png" alt="BPM">
+                <h3>BPM</h3>
+                <p>Badan Perwakilan Mahasiswa</p>
+            </div>
+            <div class="ukm-item">
+                <img src="assets/bpm-logo.png" alt="BPM">
+                <h3>BPM</h3>
+                <p>Badan Perwakilan Mahasiswa</p>
+            </div>
+            <div class="ukm-item">
+                <img src="assets/bpm-logo.png" alt="BPM">
+                <h3>BPM</h3>
+                <p>Badan Perwakilan Mahasiswa</p>
+            </div>
+            <div class="ukm-item">
+                <img src="assets/bpm-logo.png" alt="BPM">
+                <h3>BPM</h3>
+                <p>Badan Perwakilan Mahasiswa</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Panggil navbar secara langsung -->
+    <script>
+        // Memanggil navbar dari navbar.html
+        fetch('/frontend/src/utils/navbar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.body.insertAdjacentHTML('afterbegin', data);
+            })
+            .catch(error => console.error('Error loading navbar:', error));
+    </script>
+
+    <script src="/frontend/src/utils/navbar.js"></script>
+
+    <!-- Script lainnya -->
+    <script src="/frontend/src/styles/banner.js"></script>
 </body>
 </html>
