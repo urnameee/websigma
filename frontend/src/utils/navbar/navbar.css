@@ -11,14 +11,14 @@
     right: 0;
     z-index: 1000;
 }
-
+   
 .nav-brand {
     display: flex;
     align-items: center;
 }
 
 .nav-logo {
-    height: 40px;
+    height: 60px;
     width: auto;
 }
 
@@ -27,7 +27,7 @@
     list-style: none;
     margin: 0;
     padding: 0;
-    gap: 2rem;
+    gap: 2.5rem;
 }
 
 .nav-item {
@@ -37,7 +37,8 @@
 .nav-link {
     color: #333;
     text-decoration: none;
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 20px;
     transition: color 0.3s ease;
 }
 
@@ -59,27 +60,37 @@
     background-color: #333;
 }
 
+@media screen and (max-width: 1024px) {
+    .nav-link {
+        font-size: 18px;
+    }
+}
+
 @media screen and (max-width: 768px) {
     .hamburger {
         display: block;
     }
-
+    
     .hamburger.active .bar:nth-child(2) {
         opacity: 0;
     }
-
+    
     .hamburger.active .bar:nth-child(1) {
         transform: translateY(8px) rotate(45deg);
     }
-
+    
     .hamburger.active .bar:nth-child(3) {
         transform: translateY(-8px) rotate(-45deg);
     }
-
+    
+    .nav-logo {
+        height: 50px;
+    }
+    
     .nav-menu {
         position: fixed;
         left: -100%;
-        top: 70px;
+        top: 90px;
         gap: 0;
         flex-direction: column;
         background-color: #ffffff;
@@ -88,17 +99,26 @@
         transition: 0.3s;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-
+    
     .nav-item {
         margin: 16px 0;
     }
-
+    
     .nav-menu.active {
         left: 0;
     }
+
+    .nav-link {
+        font-size: 22px;
+    }
 }
 
-/* Tambahkan margin-top pada banner-container untuk mengompensasi navbar fixed */
+@media screen and (max-width: 480px) {
+    .nav-link {
+        font-size: 20px;
+    }
+}
+
 .banner-container {
-    margin-top: 70px;
+    margin-top: 90px;
 }

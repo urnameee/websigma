@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail UKM - BEM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/frontend/src/styles/user/ukm_detail_not_registered.css">
+    <link rel="stylesheet" href="/frontend/src/utils/navbar/navbar.css">
+</head>
+<body>
+    <div id="navbar"></div>
+
+    <div class="hero-section">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <img src="/frontend/public/assets/cover-bem.png" alt="Logo BEM" class="ukm-logo">
+            <h1>Badan Eksekutif Mahasiswa</h1>
+        </div>
+    </div>
+
+    <div class="content-container">
+        <div class="info-box">
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="showContent('visi')">Visi</button>
+                <button class="tab-btn" onclick="showContent('misi')">Misi</button>
+            </div>
+            
+            <div class="content-sections">
+                <div id="visi" class="content active">
+                    <p>"Akselerasi BEM KBM Polines yang adaptif, responsif, dan inovatif untuk kemajuan Polines dan Indonesia."</p>
+                </div>
+                
+                <div id="misi" class="content">
+                    <ol class="mission-list">
+                        <li>Meningkatkan keimanan dan ketakwaan kepada Tuhan yang Maha Esa
+                            <ul>
+                                <li>Memperkuat hubungan dengan POLRI</li>
+                                <li>Menjaga keamanan dan ketertiban</li>
+                                <li>Menjaga kebersihan sosial dan lingkungan</li>
+                                <li>Memberikan informasi dan mendukung aturan berkarya</li>
+                            </ul>
+                        </li>
+                        <li>Mengoptimalkan Tata Kelola Organisasi yang Progresif, Inovatif, dan Profesional
+                            <ul>
+                                <li>Membangun personalia yang kuat dan harmonis antar fungsionaris baik internal kepengurusan dan seluruh fungsionaris BEM KBM Polines</li>
+                                <li>Mengoptimalkan program kerja dan mengembangkan talenta bagi anggota</li>
+                            </ul>
+                        </li>
+                        <li>Meningkatkan Sinergitas dan elemen internal dan Eksternal BEM Polines
+                            <ul>
+                                <li>Membangun dan menjalin sinergitas yang harmonis antar lini kemahasiswaan di dalam BEM KBM Polines</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/frontend/src/utils/navbar/navbar.js"></script>
+    <script>
+        function showContent(contentId) {
+            document.querySelectorAll('.content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(contentId).classList.add('active');
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
