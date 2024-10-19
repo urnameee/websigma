@@ -1,25 +1,32 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const hamburger = document.querySelector('.hamburger');
-    const mobileMenu = document.querySelector('.mobile-menu');
-    const closeBtn = document.querySelector('.close-btn');
-
-    // Fungsi untuk membuka dan menutup menu mobile
-    function toggleMenu() {
-        mobileMenu.classList.toggle('active');
+    // Fungsi untuk memuat navbar
+    function loadNavbar() {
+        // Sesuaikan path ini dengan lokasi navbar.html Anda
+        fetch('/frontend/src/utils/navbar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('navbar-placeholder').innerHTML = data;
+                initNavbar(); // Panggil fungsi untuk inisialisasi navbar setelah dimuat
+            })
+            .catch(error => console.error('Error loading navbar:', error));
     }
 
-    // Open mobile menu when hamburger icon is clicked
-    hamburger.addEventListener('click', toggleMenu);
+    // Fungsi untuk inisialisasi navbar (hamburger menu)
+    function initNavbar() {
+        const hamburger = document.querySelector(".hamburger");
+        const navMenu = document.querySelector(".nav-menu");
 
-    // Close mobile menu when close button is clicked
-    closeBtn.addEventListener('click', function() {
-        mobileMenu.classList.remove('active');
-    });
+        hamburger.addEventListener("click", () => {
+            hamburger.classList.toggle("active");
+            navMenu.classList.toggle("active");
+        });
 
-    // Close mobile menu when clicking outside of it
-    document.addEventListener('click', function(event) {
-        if (!mobileMenu.contains(event.target) && !hamburger.contains(event.target)) {
-            mobileMenu.classList.remove('active');
-        }
-    });
+        document.querySelectorAll(".nav-link").forEach(n => n.addEventListener("click", () => {
+            hamburger.classList.remove("active");
+            navMenu.classList.remove("active");
+        }));
+    }
+
+    // Panggil fungsi loadNavbar saat DOM sudah siap
+    loadNavbar();
 });
