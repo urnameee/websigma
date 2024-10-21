@@ -36,11 +36,13 @@ body {
 }
 
 .ukm-logo {
-    width: 150px;
-    height: 150px;
-    object-fit: contain;
+    width: 100%; /* Atur agar memenuhi lebar */
+    height: auto; /* Tinggi otomatis untuk menjaga proporsi */
+    max-width: 150px; /* Tetapkan batas lebar maksimal jika diperlukan */
+    object-fit: cover; /* Pastikan gambar mengisi kotak */
     margin-bottom: 20px;
 }
+
 
 .hero-content h1 {
     font-size: 2.5em;

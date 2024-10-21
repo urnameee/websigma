@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@300;400;500;600;700&display=swap');
+
+body {
+    font-family: 'Merriweather Sans', sans-serif;
+}
+
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -10,8 +16,9 @@
     left: 0;
     right: 0;
     z-index: 1000;
+    font-family: 'Merriweather Sans', sans-serif;
 }
-   
+
 .nav-brand {
     display: flex;
     align-items: center;
@@ -60,6 +67,7 @@
     background-color: #333;
 }
 
+/* Responsif untuk ukuran layar */
 @media screen and (max-width: 1024px) {
     .nav-link {
         font-size: 18px;
@@ -119,6 +127,7 @@
     }
 }
 
+/* Cover Image styles */
 .banner-container {
     margin-top: 90px;
 }
