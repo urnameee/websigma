@@ -12,9 +12,9 @@
     <div id="navbar"></div>
 
     <div class="hero-section">
+        <img src="/frontend/public/assets/cover-bem.png" alt="BEM Banner" class="hero-banner">
         <div class="hero-overlay"></div>
         <div class="hero-content">
-            <img src="" alt="Logo BEM" class="ukm-logo">
             <h1>Badan Eksekutif Mahasiswa</h1>
         </div>
     </div>
@@ -28,7 +28,15 @@
             
             <div class="content-sections">
                 <div id="visi" class="content active">
-                    <p>"Akselerasi BEM KBM Polines yang adaptif, responsif, dan inovatif untuk kemajuan Polines dan Indonesia."</p>
+                    <h3>"Akselerasi BEM KBM Polines yang adaptif, responsif, dan inovatif untuk kemajuan Polines dan Indonesia."</h3>
+                    
+                    <h4>Akselerasi</h4>
+                    <p><em>akselerasi/ak.se.le.ra.si//akselerasi/</em> n 1 proses mempercepat; 2 peningkatan kecepatan; percepatan; 3 laju perubahan kecepatan</p>
+                    <p>Dalam visi BEM KBM Polines, akselerasi mengacu pada upaya mempercepat berbagai program dan kegiatan yang dirancang untuk mendukung kemajuan Polines. Ini mencakup percepatan dalam pengembangan keterampilan mahasiswa, implementasi teknologi, serta penyelesaian berbagai proyek dan inisiatif yang bermanfaat bagi civitas akademika. BEM KBM Polines berkomitmen untuk tidak hanya bergerak cepat tetapi juga efisien dalam mencapai tujuan.</p>
+
+                    <h4>Adaptif</h4>
+                    <p><em>adaptif/adap.tif/</em> a mudah menyesuaikan (diri) dengan keadaan</p>
+                    <p>Adaptif dalam konteks visi ini berarti BEM KBM Polines harus mampu menyesuaikan diri dengan berbagai perubahan dan dinamika yang terjadi di lingkungan internal dan eksternal. Hal ini mencakup respons terhadap perkembangan teknologi, perubahan kebijakan pendidikan, serta tuntutan dan kebutuhan mahasiswa yang terus berkembang. Kemampuan untuk beradaptasi memastikan bahwa BEM KBM Polines tetap relevan dan efektif dalam menghadapi tantangan.</p>
                 </div>
                 
                 <div id="misi" class="content">
@@ -58,18 +66,86 @@
         </div>
     </div>
 
+    <div class="org-structure-section">
+        <h2>Struktur Organisasi</h2>
+        <div class="org-chart">
+            <div class="org-member">
+                <div class="org-member-image">
+                    <img src="/frontend/public/assets/2.jpg" alt="Dirga Priyatno" />
+                </div>
+                <div class="org-member-info">
+                    <h3>Dirga Priyatno</h3>
+                    <p>Presiden Mahasiswa</p>
+                    <p>Tahun Periode 2025/2026</p>
+                </div>
+            </div>
+            <div class="org-member">
+                <div class="org-member-image">
+                    <img src="/frontend/public/assets/3.jpg" alt="Shafa Tegal" />
+                </div>
+                <div class="org-member-info">
+                    <h3>Shafa Tegal</h3>
+                    <p>Wakil Presiden Mahasiswa</p>
+                    <p>Tahun Periode 2025/2026</p>
+                </div>
+            </div>
+            <div class="org-member">
+                <div class="org-member-image">
+                    <img src="/frontend/public/assets/1.jpg" alt="Faiz Suhu" />
+                </div>
+                <div class="org-member-info">
+                    <h3>Faiz Suhu</h3>
+                    <p>Deputi Kementrian</p>
+                    <p>Tahun Periode 2025/2026</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- Sebelum registration-cta, tambahkan section gallery -->
+<div class="gallery-section">
+    <h2>Galeri Kegiatan</h2>
+    <div class="carousel-container">
+        <div class="carousel-track">
+            <div class="carousel-slide">
+                <img src="/frontend/public/assets/tew.jpg" alt="Kegiatan 1">
+                <div class="slide-description">
+                    <h3>MAKRAB AWAL</h3>
+                    <p>Acara keluargaan untuk menjalin kerukunan dan saling mengenal antar pengurus UKM PCC.</p>
+                </div>
+            </div>
+            <div class="carousel-slide active">
+                <img src="/frontend/public/assets/mew.jpg" alt="Kegiatan 2">
+                <div class="slide-description">
+                    <h3>OPEN HOUSE</h3>
+                    <p>Memperkenalkan lebih dalam UKM PCC dan kegiatan-kegiatannya kepada calon anggota.</p>
+                </div>
+            </div>
+            <div class="carousel-slide">
+                <img src="/frontend/public/assets/kuw.jpg" alt="Kegiatan 3">
+                <div class="slide-description">
+                    <h3>PENDAS & PAB</h3>
+                    <p>Memberikan pendidikan dasar dan pembekalan kepada calon anggota aktif UKM PCC.</p>
+                </div>
+            </div>
+        </div>
+        <button class="carousel-button prev">&lt;</button>
+        <button class="carousel-button next">&gt;</button>
+    </div>
+</div>
+
+    <section class="registration-cta">
+        <div class="cta-image">
+            <img src="/frontend/public/assets/daftar.png" alt="Ilustrasi Pendaftaran" />
+        </div>
+        <div class="cta-content">
+            <h2>Ayo Daftarkan Dirimu Sekarang!</h2>
+            <p>Ndang daftar su.</p>
+            <button class="cta-button">Daftar</button>
+        </div>
+    </section>
+
     <script src="/frontend/src/utils/navbar/navbar.js"></script>
-    <script>
-        function showContent(contentId) {
-            document.querySelectorAll('.content').forEach(content => {
-                content.classList.remove('active');
-            });
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.getElementById(contentId).classList.add('active');
-            event.target.classList.add('active');
-        }
-    </script>
+    <script src="/frontend/src/pages/user/bem_galeri.js"></script>
 </body>
 </html>

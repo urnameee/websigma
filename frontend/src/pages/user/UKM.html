@@ -4,11 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UKM</title>
-    <link rel="stylesheet" href="/frontend/src/utils/navbar/navbar.css">
+    <link rel="stylesheet" href="/frontend/src/styles/user/UKM.css">
 </head>
 <body>
     <div id="navbar"></div>
-    <script src="/frontend/src/utils//navbar/navbar.js"></script>
+    <div class="content-container">
+        <h2>UKM yang Diikuti</h2>
+        <div class="ukm-grid">
+            <a href="/frontend/src/pages/user/ukm_detail_not_registered.html" class="ukm-card">
+                <img src="/frontend/public/assets/logo-bem.png" alt="BEM Logo" class="ukm-logo">
+                <div class="ukm-name">BEM</div>
+                <div class="ukm-desc">Badan Eksekutif Mahasiswa</div>
+            </a>
+            <a href="#" class="ukm-card">
+                <img src="/frontend/public/assets/logo-bem.png" alt="PCC Logo" class="ukm-logo">
+                <div class="ukm-name">PCC</div>
+                <div class="ukm-desc">Polytechnic Computer Club</div>
+            </a>
+        </div>
 
+        <h2>Rekomendasi UKM</h2>
+        <div class="ukm-grid">
+            <a href="https://www.google.com" class="ukm-card">
+                <img src="/frontend/public/assets/logo-bem.png" alt="PP Logo" class="ukm-logo">
+                <div class="ukm-name">PP</div>
+                <div class="ukm-desc">Pengembangan Pengetahuan</div>
+            </a>
+            <a href="#" class="ukm-card">
+                <img src="/api/placeholder/120/120" alt="BPM Logo" class="ukm-logo">
+                <div class="ukm-name">BPM</div>
+                <div class="ukm-desc">Badan Perwakilan Mahasiswa</div>
+            </a>
+            <a href="#" class="ukm-card">
+                <img src="/api/placeholder/120/120" alt="Basket Logo" class="ukm-logo">
+                <div class="ukm-name">Basket</div>
+                <div class="ukm-desc">UKM Bola Basket</div>
+            </a>
+            <a href="#" class="ukm-card">
+                <img src="/api/placeholder/120/120" alt="Fotografi Logo" class="ukm-logo">
+                <div class="ukm-name">Fotografi</div>
+                <div class="ukm-desc">UKM Fotografi</div>
+            </a>
+        </div>
+    </div>
+    <script src="/frontend/src/utils/navbar/navbar.js"></script>
 </body>
 </html>

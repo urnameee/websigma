@@ -2,6 +2,9 @@
 
 body {
     font-family: 'Merriweather Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 .navbar {
@@ -16,7 +19,6 @@ body {
     left: 0;
     right: 0;
     z-index: 1000;
-    font-family: 'Merriweather Sans', sans-serif;
 }
 
 .nav-brand {
@@ -56,24 +58,26 @@ body {
 .hamburger {
     display: none;
     cursor: pointer;
+    z-index: 2000; /* Memastikan hamburger berada di atas elemen lainnya */
 }
 
 .bar {
     display: block;
-    width: 25px;
-    height: 3px;
+    width: 30px;
+    height: 4px;
     margin: 5px auto;
     transition: all 0.3s ease;
     background-color: #333;
 }
 
-/* Responsif untuk ukuran layar */
+/* Responsif untuk ukuran layar desktop */
 @media screen and (max-width: 1024px) {
     .nav-link {
         font-size: 18px;
     }
 }
 
+/* Responsif untuk ukuran layar mobile */
 @media screen and (max-width: 768px) {
     .hamburger {
         display: block;
@@ -84,32 +88,28 @@ body {
     }
     
     .hamburger.active .bar:nth-child(1) {
-        transform: translateY(8px) rotate(45deg);
+        transform: translateY(10px) rotate(45deg);
     }
     
     .hamburger.active .bar:nth-child(3) {
-        transform: translateY(-8px) rotate(-45deg);
-    }
-    
-    .nav-logo {
-        height: 50px;
+        transform: translateY(-10px) rotate(-45deg);
     }
     
     .nav-menu {
         position: fixed;
         left: -100%;
-        top: 90px;
-        gap: 0;
-        flex-direction: column;
-        background-color: #ffffff;
+        top: 0;
+        height: 100%;
         width: 100%;
-        text-align: center;
-        transition: 0.3s;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        flex-direction: column;
+        background-color: #fff;
+        text-align: left;
+        padding-top: 50px;
+        transition: left 0.3s ease;
     }
     
     .nav-item {
-        margin: 16px 0;
+        margin: 1.5rem;
     }
     
     .nav-menu.active {
@@ -117,10 +117,16 @@ body {
     }
 
     .nav-link {
-        font-size: 22px;
+        font-size: 24px;
+        color: #00274D;
+        text-decoration: none;
+        font-weight: bold;
+        padding: 0.75rem;
+        display: block;
     }
 }
 
+/* Responsif untuk layar lebih kecil */
 @media screen and (max-width: 480px) {
     .nav-link {
         font-size: 20px;
@@ -130,4 +136,9 @@ body {
 /* Cover Image styles */
 .banner-container {
     margin-top: 90px;
+}
+
+/* Styling untuk elemen body dan menu saat dalam mode mobile */
+body.mobile-menu-active {
+    overflow: hidden;
 }
