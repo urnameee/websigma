@@ -1,30 +1,27 @@
 <?php
-// Memulai session (jika diperlukan untuk fitur login)
 session_start();
-
-// Mengambil koneksi dari config.php
 require_once '../config/config.php';
 
-// Set header untuk mengembalikan response dalam format JSON
 header('Content-Type: application/json');
 
 try {
-    // Query untuk mengambil data nim dan nama_lengkap dari tabel mahasiswa
-    $stmt = $pdo->query("SELECT nim, nama_lengkap, email, kelas FROM mahasiswa");
-    
-    // Menyimpan data mahasiswa ke array
-    $mahasiswa = [];
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $mahasiswa[] = $row;
-    }
+    // Ambil username dari sesi
+    if (isset($_SESSION['username'])) {
+        $username = $_SESSION['username'];
 
-    // Mengembalikan data dalam format JSON
-    echo json_encode($mahasiswa);
+        // Query untuk mengambil data mahasiswa berdasarkan username (nim)
+        $stmt = $pdo->prepare("SELECT nim, nama_lengkap, email, kelas FROM mahasiswa WHERE nim = :username");
+        $stmt->execute(['username' => $username]);
+
+        // Menyimpan data mahasiswa ke array
+        $mahasiswa = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Mengembalikan data dalam format JSON
+        echo json_encode($mahasiswa);
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'User not logged in']);
+    }
 } catch (PDOException $e) {
-    // Jika ada error, kirim response dengan status error
-    echo json_encode([
-        'status' => 'error',
-        'message' => 'Terjadi kesalahan: ' . $e->getMessage()
-    ]);
+    echo json_encode(['status' => 'error', 'message' => 'Terjadi kesalahan: ' . $e->getMessage()]);
 }
 ?>

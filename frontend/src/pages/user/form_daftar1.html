@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulir Pendaftaran</title>
+    <!-- Import Merriweather Sans font -->
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/frontend/src/styles/user/form_daftar1.css">
+</head>
+<body>
+
+    <div id="navbar"></div>
+
+    <div class="progress-bar">
+        <div class="step">
+            <span class="step-label">TAHAP 1</span>
+        </div>
+        <div class="step">
+            <span class="step-label">TAHAP 2</span>
+        </div>
+        <div class="step">
+            <span class="step-label">TAHAP 3</span>
+        </div>
+    </div>
+
+    <div class="form-container">
+        <h1>Formulir Pendaftaran Tahap Pertama</h1>
+        <form id="registrationForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Nama lengkap" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="NIM" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <select class="form-control" required>
+                    <option value="" disabled selected>Jenis kelamin</option>
+                    <option value="L">Laki-laki</option>
+                    <option value="P">Perempuan</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <select class="form-control" required>
+                        <option value="" disabled selected>Jurusan</option>
+                        <option value="ti">Teknik Informatika</option>
+                        <option value="si">Sistem Informasi</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <select class="form-control" required>
+                        <option value="" disabled selected>Program Studi</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Kelas" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Alamat" required>
+                </div>
+                <div class="form-group">
+                    <input type="tel" class="form-control" placeholder="No whatsapp" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Motivasi" required>
+            </div>
+
+            <div class="button-group">
+                <button type="button">Edit</button>
+                <a href="/frontend/src/pages/user/form_daftar2.html">
+                    <button type="button">Submit</button>
+                  </a>                  
+            </div>
+        </form>
+    </div>
+
+    <script src="/frontend/src/utils/navbar/navbar.js"></script>
+
+</body>
+</html>
