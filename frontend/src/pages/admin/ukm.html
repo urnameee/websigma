@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Data UKM</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/frontend/src/pages/admin/plugins/fontawesome-free/css/all.min.css">
+  <!-- DataTables -->
+  <link rel="stylesheet" href="/frontend/src/pages/admin/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="/frontend/src/pages/admin/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/frontend/src/pages/admin/dist/css/adminlte.min.css">
+  <!-- daterange picker -->
+  <link rel="stylesheet" href="/frontend/src/pages/admin/plugins/daterangepicker/daterangepicker.css">
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Data UKM</h1>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-form">
+                <i class="fas fa-plus"></i> Tambah UKM
+              </button>
+            </div>
+            <div class="card-body">
+              <table id="tabel-ukm" class="table table-bordered table-striped">
+                <thead>
+                  <tr>
+                    <th>Logo</th>
+                    <th>Nama UKM</th>
+                    <th>Deskripsi</th>
+                    <th>Visi</th>
+                    <th>Misi</th>
+                    <th>Tanggal Berdiri</th>
+                    <th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Data will be loaded here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Add/Edit -->
+    <div class="modal fade" id="modal-form">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Form UKM</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form id="form-ukm" enctype="multipart/form-data">
+            <div class="modal-body">
+              <input type="hidden" id="form-mode" value="add">
+              <input type="hidden" id="id_ukm" name="id_ukm">
+              
+              <div class="form-group">
+                <label for="nama_ukm">Nama UKM</label>
+                <input type="text" class="form-control" id="nama_ukm" name="nama_ukm" required>
+              </div>
+
+              <div class="form-group">
+                <label for="deskripsi">Deskripsi</label>
+                <textarea class="form-control" id="deskripsi" name="deskripsi" rows="3"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="visi">Visi</label>
+                <textarea class="form-control" id="visi" name="visi" rows="3"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="misi">Misi</label>
+                <textarea class="form-control" id="misi" name="misi" rows="3"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="tanggal_berdiri">Tanggal Berdiri</label>
+                <input type="text" class="form-control datepicker" id="tanggal_berdiri" name="tanggal_berdiri">
+              </div>
+
+              <div class="form-group">
+                <label for="logo">Logo UKM</label>
+                <div class="input-group">
+                  <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="logo" name="logo" accept=".png">
+                    <label class="custom-file-label" for="logo">Choose file</label>
+                  </div>
+                </div>
+                <small class="text-muted">Format: PNG, Maksimal 5MB</small>
+                <div id="preview-logo" class="mt-2"></div>
+              </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+              <button type="submit" class="btn btn-primary">Simpan</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Delete Confirmation-->
+    <div class="modal fade" id="modal-delete">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Konfirmasi Hapus</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Apakah Anda yakin ingin menghapus data ini?</p>
+            <input type="hidden" id="delete-id">
+          </div>
+          <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+            <button type="button" class="btn btn-danger" id="btn-confirm-delete">Hapus</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- REQUIRED SCRIPTS -->
+<!-- jQuery -->
+<script src="/frontend/src/pages/admin/plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="/frontend/src/pages/admin/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- DataTables -->
+<script src="/frontend/src/pages/admin/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/frontend/src/pages/admin/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="/frontend/src/pages/admin/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<!-- bs-custom-file-input -->
+<script src="/frontend/src/pages/admin/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
+<!-- InputMask -->
+<script src="/frontend/src/pages/admin/plugins/moment/moment.min.js"></script>
+<script src="/frontend/src/pages/admin/plugins/inputmask/jquery.inputmask.min.js"></script>
+<!-- date-range-picker -->
+<script src="/frontend/src/pages/admin/plugins/daterangepicker/daterangepicker.js"></script>
+<!-- AdminLTE App -->
+<script src="/frontend/src/pages/admin/dist/js/adminlte.min.js"></script>
+
+<!-- Page specific script -->
+<script>
+$(function () {
+  // Initialize DataTable
+  var table = $('#tabel-ukm').DataTable({
+    "responsive": true,
+    "autoWidth": false,
+    "ajax": {
+      "url": "/backend/controllers/admin/ukm.php?action=get_all",
+      "type": "GET"
+    },
+    "columns": [
+      { 
+        "data": "logo_path",
+        "render": function(data, type, row) {
+          return data ? `<img src="/frontend/public/assets/${data}" height="50">` : '';
+        }
+      },
+      { "data": "nama_ukm" },
+      { "data": "deskripsi" },
+      { "data": "visi" },
+      { "data": "misi" },
+      { 
+        "data": "tanggal_berdiri",
+        "render": function(data) {
+          return moment(data).format('DD/MM/YYYY');
+        }
+      },
+      {
+        "data": null,
+        "render": function(data, type, row) {
+          return `
+            <button class="btn btn-sm btn-info btn-edit" data-id="${row.id_ukm}">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn btn-sm btn-danger btn-delete" data-id="${row.id_ukm}">
+              <i class="fas fa-trash"></i>
+            </button>
+          `;
+        }
+      }
+    ]
+  });
+
+  // Initialize bs-custom-file-input
+  bsCustomFileInput.init();
+
+  // Initialize Datepicker
+  $('#tanggal_berdiri').daterangepicker({
+    singleDatePicker: true,
+    locale: {
+      format: 'DD/MM/YYYY'
+    }
+  });
+
+  // Preview Image
+  $('#logo').change(function() {
+    const file = this.files[0];
+    if (file) {
+      let reader = new FileReader();
+      reader.onload = function(event) {
+        $('#preview-logo').html(`<img src="${event.target.result}" class="img-fluid" style="max-height: 200px">`);
+      }
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // Handle form submit
+  $('#form-ukm').on('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    const mode = $('#form-mode').val();
+    
+    $.ajax({
+      url: `/backend/controllers/admin/ukm.php?action=${mode}`,
+      type: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function(response) {
+        if(response.status === 'success') {
+          $('#modal-form').modal('hide');
+          table.ajax.reload();
+          alert('Data berhasil disimpan!');
+        } else {
+          alert('Gagal menyimpan data: ' + response.message);
+        }
+      },
+      error: function() {
+        alert('Terjadi kesalahan sistem');
+      }
+    });
+  });
+
+  // Handle edit button
+  $('#tabel-ukm').on('click', '.btn-edit', function() {
+    const id = $(this).data('id');
+    $('#form-mode').val('edit');
+    
+    $.get(`/backend/controllers/admin/ukm.php?action=get_one&id=${id}`, function(data) {
+      $('#id_ukm').val(data.id_ukm);
+      $('#nama_ukm').val(data.nama_ukm);
+      $('#deskripsi').val(data.deskripsi);
+      $('#visi').val(data.visi);
+      $('#misi').val(data.misi);
+      $('#tanggal_berdiri').val(moment(data.tanggal_berdiri).format('DD/MM/YYYY'));
+      
+      if(data.logo_path) {
+        $('#preview-logo').html(`<img src="/frontend/public/assets/${data.logo_path}" class="img-fluid" style="max-height: 200px">`);
+      }
+      
+      $('#modal-form').modal('show');
+    });
+  });
+
+  // Handle delete button
+  $('#tabel-ukm').on('click', '.btn-delete', function() {
+    const id = $(this).data('id');
+    $('#delete-id').val(id);
+    $('#modal-delete').modal('show');
+  });
+
+  // Handle delete confirmation
+  $('#btn-confirm-delete').on('click', function() {
+    const id = $('#delete-id').val();
+    
+    $.ajax({
+      url: '/backend/controllers/admin/ukm.php?action=delete',
+      type: 'POST',
+      data: { id_ukm: id },
+      success: function(response) {
+        if(response.status === 'success') {
+          $('#modal-delete').modal('hide');
+          table.ajax.reload();
+          alert('Data berhasil dihapus!');
+        } else {
+          alert('Gagal menghapus data: ' + response.message);
+        }
+      },
+      error: function() {
+        alert('Terjadi kesalahan sistem');
+      }
+    });
+  });
+
+  // Reset form when modal is hidden
+  $('#modal-form').on('hidden.bs.modal', function () {
+    $('#form-ukm')[0].reset();
+    $('#preview-logo').html('');
+    $('#form-mode').val('add');
+  });
+});
+</script>
+</body>
+</html>

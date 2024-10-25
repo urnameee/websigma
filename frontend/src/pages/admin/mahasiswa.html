@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Data Mahasiswa</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/frontend/src/pages/admin/plugins/fontawesome-free/css/all.min.css">
+  <!-- DataTables -->
+  <link rel="stylesheet" href="/frontend/src/pages/admin/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="/frontend/src/pages/admin/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/frontend/src/pages/admin/dist/css/adminlte.min.css">
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Data Mahasiswa</h1>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-form">
+                    <i class="fas fa-plus"></i> Tambah Mahasiswa
+                  </button>
+            </div>
+            <div class="card-body">
+              <table id="tabel-mahasiswa" class="table table-bordered table-striped">
+                <thead>
+                  <tr>
+                    <th>NIM</th>
+                    <th>Nama Lengkap</th>
+                    <th>Program Studi</th>
+                    <th>Kelas</th>
+                    <th>Jenis Kelamin</th>
+                    <th>No WhatsApp</th>
+                    <th>Email</th>
+                    <th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Data will be loaded here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Add/Edit -->
+    <div class="modal fade" id="modal-form">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Form Mahasiswa</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form id="form-mahasiswa">
+            <div class="modal-body">
+              <input type="hidden" id="form-mode" value="add">
+              <div class="form-group">
+                <label for="nim">NIM</label>
+                <input type="text" class="form-control" id="nim" name="nim" required>
+              </div>
+              <div class="form-group">
+                <label for="nama_lengkap">Nama Lengkap</label>
+                <input type="text" class="form-control" id="nama_lengkap" name="nama_lengkap" required>
+              </div>
+              <div class="form-group">
+                <label for="id_program_studi">Program Studi</label>
+                <select class="form-control" id="id_program_studi" name="id_program_studi" required>
+                  <!-- Program studi will be loaded here -->
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="kelas">Kelas</label>
+                <input type="text" class="form-control" id="kelas" name="kelas" required>
+              </div>
+              <div class="form-group">
+                <label>Jenis Kelamin</label>
+                <div class="custom-control custom-radio">
+                  <input class="custom-control-input" type="radio" id="jk1" name="jenis_kelamin" value="Laki-laki" checked>
+                  <label for="jk1" class="custom-control-label">Laki-laki</label>
+                </div>
+                <div class="custom-control custom-radio">
+                  <input class="custom-control-input" type="radio" id="jk2" name="jenis_kelamin" value="Perempuan">
+                  <label for="jk2" class="custom-control-label">Perempuan</label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="alamat">Alamat</label>
+                <textarea class="form-control" id="alamat" name="alamat" rows="3"></textarea>
+              </div>
+              <div class="form-group">
+                <label for="no_whatsapp">No WhatsApp</label>
+                <input type="text" class="form-control" id="no_whatsapp" name="no_whatsapp">
+              </div>
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" name="email">
+              </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+              <button type="submit" class="btn btn-primary">Simpan</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Delete Confirmation-->
+    <div class="modal fade" id="modal-delete">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Konfirmasi Hapus</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Apakah Anda yakin ingin menghapus data ini?</p>
+            <input type="hidden" id="delete-nim">
+          </div>
+          <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+            <button type="button" class="btn btn-danger" id="btn-confirm-delete">Hapus</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- REQUIRED SCRIPTS -->
+<!-- jQuery -->
+<script src="/frontend/src/pages/admin/plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="/frontend/src/pages/admin/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- DataTables -->
+<script src="/frontend/src/pages/admin/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/frontend/src/pages/admin/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="/frontend/src/pages/admin/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<!-- AdminLTE App -->
+<script src="/frontend/src/pages/admin/dist/js/adminlte.min.js"></script>
+
+<!-- Page specific script -->
+<script>
+$(function () {
+  // Initialize DataTable
+  var table = $('#tabel-mahasiswa').DataTable({
+    "responsive": true,
+    "autoWidth": false,
+    "ajax":  {
+      "url": "/backend/controllers/admin/mahasiswa.php?action=get_all",
+      "type": "GET"
+    },
+    "columns": [
+      { "data": "nim" },
+      { "data": "nama_lengkap" },
+      { "data": "nama_program_studi" },
+      { "data": "kelas" },
+      { "data": "jenis_kelamin" },
+      { "data": "no_whatsapp" },
+      { "data": "email" },
+      {
+        "data": null,
+        "render": function(data, type, row) {
+          return `
+            <button class="btn btn-sm btn-info btn-edit" data-nim="${row.nim}">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn btn-sm btn-danger btn-delete" data-nim="${row.nim}">
+              <i class="fas fa-trash"></i>
+            </button>
+          `;
+        }
+      }
+    ]
+  });
+
+  // Load Program Studi
+  $.get("/backend/controllers/admin/mahasiswa.php?action=get_prodi", function(data) {
+    let options = '<option value="">Pilih Program Studi</option>';
+    data.forEach(function(prodi) {
+      options += `<option value="${prodi.id_program_studi}">${prodi.nama_program_studi}</option>`;
+    });
+    $('#id_program_studi').html(options);
+  });
+
+  // Handle form submit
+  $('#form-mahasiswa').on('submit', function(e) {
+    e.preventDefault();
+    const mode = $('#form-mode').val();
+    const formData = new FormData(this);
+    
+    $.ajax({
+      url: `/backend/controllers/admin/mahasiswa.php?action=${mode}`,
+      type: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function(response) {
+        if(response.status === 'success') {
+          $('#modal-form').modal('hide');
+          table.ajax.reload();
+          alert('Data berhasil disimpan!');
+        } else {
+          alert('Gagal menyimpan data: ' + response.message);
+        }
+      },
+      error: function() {
+        alert('Terjadi kesalahan sistem');
+      }
+    });
+  });
+
+  // Handle edit button
+  $('#tabel-mahasiswa').on('click', '.btn-edit', function() {
+    const nim = $(this).data('nim');
+    $('#form-mode').val('edit');
+    
+    $.get(`/backend/controllers/admin/mahasiswa.php?action=get_one&nim=${nim}`, function(data) {
+      $('#nim').val(data.nim);
+      $('#nama_lengkap').val(data.nama_lengkap);
+      $('#id_program_studi').val(data.id_program_studi);
+      $('#kelas').val(data.kelas);
+      $(`input[name=jenis_kelamin][value=${data.jenis_kelamin}]`).prop('checked', true);
+      $('#alamat').val(data.alamat);
+      $('#no_whatsapp').val(data.no_whatsapp);
+      $('#email').val(data.email);
+      
+      $('#modal-form').modal('show');
+    });
+  });
+
+  // Handle delete button
+  $('#tabel-mahasiswa').on('click', '.btn-delete', function() {
+    const nim = $(this).data('nim');
+    $('#delete-nim').val(nim);
+    $('#modal-delete').modal('show');
+  });
+
+  // Handle delete confirmation
+  $('#btn-confirm-delete').on('click', function() {
+    const nim = $('#delete-nim').val();
+    
+    $.ajax({
+      url: '/backend/controllers/admin/mahasiswa.php?action=delete',
+      type: 'POST',
+      data: { nim: nim },
+      success: function(response) {
+        if(response.status === 'success') {
+          $('#modal-delete').modal('hide');
+          table.ajax.reload();
+          alert('Data berhasil dihapus!');
+        } else {
+          alert('Gagal menghapus data: ' + response.message);
+        }
+      },
+      error: function() {
+        alert('Terjadi kesalahan sistem');
+      }
+    });
+  });
+});
+</script>
+<script>$.get("/backend/controllers/admin/mahasiswa.php?action=get_prodi", function(data) {
+    console.log("Response Program Studi:", data); // Debug line
+    
+    let options = '<option value="">Pilih Program Studi</option>';
+    data.forEach(function(prodi) {
+        options += `<option value="${prodi.id_program_studi}">${prodi.nama_program_studi}</option>`;
+    });
+    $('#id_program_studi').html(options);
+}).fail(function(jqXHR, textStatus, errorThrown) {
+    console.error("AJAX Error:", textStatus, errorThrown); // Debug line
+});</script>
+<script>// Handler untuk tombol Tambah Mahasiswa
+    $('[data-target="#modal-form"]').on('click', function() {
+      // Reset form
+      $('#form-mahasiswa')[0].reset();
+      $('#form-mode').val('add');
+      $('#nim').prop('readonly', false);  // Enable NIM field for new data
+      $('#modal-form').modal('show');
+    });
+    
+    // Tambahkan ini di handler edit button
+    $('#tabel-mahasiswa').on('click', '.btn-edit', function() {
+      const nim = $(this).data('nim');
+      $('#form-mode').val('edit');
+      $('#nim').prop('readonly', true);  // Disable NIM field for edit
+      // ... kode lainnya tetap sama
+    });</script>
+    
+    <script>// Load Program Studi
+        function loadProgramStudi() {
+          $.ajax({
+            url: "/backend/controllers/admin/mahasiswa.php?action=get_prodi",
+            type: "GET",
+            success: function(data) {
+              console.log("Response Program Studi:", data);
+              let options = '<option value="">Pilih Program Studi</option>';
+              if (Array.isArray(data)) {
+                data.forEach(function(prodi) {
+                  options += `<option value="${prodi.id_program_studi}">${prodi.nama_program_studi}</option>`;
+                });
+                $('#id_program_studi').html(options);
+              } else {
+                console.error("Data program studi bukan array:", data);
+              }
+            },
+            error: function(xhr, status, error) {
+              console.error("Error loading program studi:", error);
+              console.error("Status:", status);
+              console.error("Response:", xhr.responseText);
+            }
+          });
+        }
+        
+        // Panggil fungsi saat dokumen ready
+        $(document).ready(function() {
+          loadProgramStudi();
+        });</script>
+</body>
+</html>
