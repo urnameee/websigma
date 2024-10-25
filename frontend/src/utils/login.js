@@ -1,4 +1,4 @@
-// Event listener untuk menyembunyikan error message saat user mulai mengetik
+// login.js
 document.getElementById('username').addEventListener('input', function() {
     const errorMessageContainer = document.getElementById('errorMessageContainer');
     errorMessageContainer.style.display = 'none';
@@ -9,7 +9,6 @@ document.getElementById('password').addEventListener('input', function() {
     errorMessageContainer.style.display = 'none';
 });
 
-// Function untuk menampilkan error message
 function showErrorMessage(message) {
     const errorMessageContainer = document.getElementById('errorMessageContainer');
     const errorMessageText = document.getElementById('errorMessageText');
@@ -17,13 +16,11 @@ function showErrorMessage(message) {
     errorMessageText.textContent = message;
     errorMessageContainer.style.display = 'flex';
     
-    // Optional: Auto hide after 5 seconds
     setTimeout(() => {
         errorMessageContainer.style.display = 'none';
     }, 5000);
 }
 
-// Function untuk validasi input
 function validateInput(username, password) {
     if (!username.trim()) {
         showErrorMessage('Silakan masukkan username');
@@ -36,14 +33,27 @@ function validateInput(username, password) {
     return true;
 }
 
-// Event listener untuk form submission
+// Handle role-based redirect
+function handleRoleRedirect(role) {
+    switch(role.toLowerCase()) {
+        case 'mahasiswa':
+            window.location.href = '/frontend/src/pages/user/beranda.html';
+            break;
+        case 'super_admin':
+            window.location.href = '/frontend/src/pages/admin/dashboard.html';
+            break;
+        default:
+            showErrorMessage('Role tidak valid');
+            break;
+    }
+}
+
 document.getElementById('loginForm').addEventListener('submit', async function(event) {
     event.preventDefault();
     
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
     
-    // Validasi input
     if (!validateInput(username, password)) {
         return;
     }
@@ -64,10 +74,9 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
         const result = await response.json();
         
         if (result.status === 'success') {
-            // Hide any error messages if they exist
             document.getElementById('errorMessageContainer').style.display = 'none';
-            // Redirect ke halaman yang sesuai
-            window.location.href = '/frontend/src/pages/user/beranda.html';
+            // Use the role from the response to determine redirect
+            handleRoleRedirect(result.user.role);
         } else {
             showErrorMessage(result.message || 'Maaf, username atau password yang anda masukan salah.');
         }
@@ -77,7 +86,6 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
     }
 });
 
-// Optional: Close error message when clicking on it
 document.getElementById('errorMessageContainer').addEventListener('click', function() {
     this.style.display = 'none';
 });
