@@ -1,4 +1,3 @@
-// /backend/controllers/admin/dashboard.php
 <?php
 require_once '../../config/config.php';
 
@@ -6,10 +5,10 @@ require_once '../../config/config.php';
 header('Content-Type: application/json');
 // Tambahkan header CORS jika diperlukan
 header('Access-Control-Allow-Origin: *');
-// Get action from URL parameter
+// Get action dari parameter URL
 $action = $_GET['action'] ?? '';
 
-switch($action) {
+switch ($action) {
     case 'get_stats':
         getStats();
         break;
@@ -17,13 +16,13 @@ switch($action) {
         getUkmMembers();
         break;
     default:
-        echo json_encode(['status' => 'error', 'message' => 'Action not found']);
+        echo json_encode(['status' => 'error', 'message' => 'Action tidak ditemukan']);
         break;
 }
 
 function getStats() {
     global $pdo;
-    
+
     try {
         // Debug: Log query execution
         error_log("Executing getStats");
@@ -46,6 +45,7 @@ function getStats() {
         $users_by_role = $stmt->fetchAll(PDO::FETCH_ASSOC);
         error_log("Users by role: " . print_r($users_by_role, true));
 
+        // Response
         $response = [
             'status' => 'success',
             'data' => [
@@ -58,7 +58,7 @@ function getStats() {
         error_log("Response: " . print_r($response, true));
         echo json_encode($response);
         
-    } catch(PDOException $e) {
+    } catch (PDOException $e) {
         error_log("Error in getStats: " . $e->getMessage());
         echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
     }
@@ -66,12 +66,12 @@ function getStats() {
 
 function getUkmMembers() {
     global $pdo;
-    
+
     try {
         $query = "SELECT u.nama_ukm, COUNT(k.nim) as total_anggota 
-                 FROM ukm u 
-                 LEFT JOIN keanggotaan_ukm k ON u.id_ukm = k.id_ukm 
-                 GROUP BY u.id_ukm, u.nama_ukm";
+                  FROM ukm u 
+                  LEFT JOIN keanggotaan_ukm k ON u.id_ukm = k.id_ukm 
+                  GROUP BY u.id_ukm, u.nama_ukm";
         $stmt = $pdo->query($query);
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -79,7 +79,7 @@ function getUkmMembers() {
             'status' => 'success',
             'data' => $data
         ]);
-    } catch(PDOException $e) {
+    } catch (PDOException $e) {
         echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
     }
 }
