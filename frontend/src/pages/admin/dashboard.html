@@ -33,7 +33,7 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/logout.php" role="button">
+        <a class="nav-link" href="/frontend/src/pages/user/login_page.html" role="button">
           <i class="fas fa-sign-out-alt"></i>
         </a>
       </li>
@@ -219,7 +219,6 @@ $(function () {
 
     // Load dashboard stats
     $.get('/backend/controllers/admin/dashboard.php?action=get_stats', function(response) {
-        
         console.log('Raw response:', response);
     
     try {
