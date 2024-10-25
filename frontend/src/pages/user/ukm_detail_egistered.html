@@ -3,27 +3,337 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detail UKM Terdaftar</title>
+    <title>Detail PMC - Program Kerja</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: Arial, sans-serif;
         }
 
         body {
+            background-color: #f5f5f5;
+            min-height: 100vh;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
         }
 
-        img {
-            width: 1280px;
-            height: 488px;
+        .header {
+            background-color: #fff;
+            padding: 16px 32px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            height: 60px;
+            display: flex;
+            align-items: center;
+        }
+
+        .back-button {
+            text-decoration: none;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+        }
+
+        .main-container {
+            display: flex;
+            height: calc(100vh - 60px);
+            margin-top: 60px;
+        }
+
+        .sidebar {
+            width: 300px;
+            background: #fff;
+            border-right: 1px solid #eee;
+            padding: 20px;
+            height: 100%;
+            overflow-y: auto;
+            position: fixed;
+            left: 0;
+        }
+
+        .content {
+            flex: 1;
+            margin-left: 300px;
+            padding: 32px;
+            overflow-y: auto;
+            height: calc(100vh - 60px);
+        }
+
+        .organization-banner {
+            width: 100%;
+            margin-bottom: 24px;
+        }
+
+        .organization-banner img {
+            width: 100%;
+            height: 200px;
             object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .program-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .program-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .program-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .program-date {
+            font-size: 16px;
+            color: #666;
+            margin-top: 8px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background-color: #fff3e0;
+            color: #ff9800;
+        }
+
+        .status-completed {
+            background-color: #e8f5e9;
+            color: #4caf50;
+        }
+
+        .committee-section {
+            margin: 24px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .committee-title {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 16px;
+        }
+
+        .committee-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .committee-item {
+            padding: 16px;
+            background: #fff;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+
+        .committee-role {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .committee-name {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .meetings-section {
+            margin-top: 24px;
+        }
+
+        .meeting-item {
+            padding: 16px;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .meeting-item:hover {
+            background-color: #f8f9fa;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .meeting-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .meeting-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .meeting-date {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .pdf-viewer {
+            margin-top: 16px;
+            width: 100%;
+            height: 600px;
+            border: none;
+            border-radius: 12px;
+            display: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .pdf-viewer.active {
+            display: block;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .sidebar-menu li:hover {
+            background-color: #f0f0f0;
+        }
+
+        .sidebar-menu li.active {
+            background-color: #e3f2fd;
+            color: #1976d2;
+            font-weight: 500;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 250px;
+            }
+            .content {
+                margin-left: 250px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            .content {
+                margin-left: 0;
+            }
         }
     </style>
 </head>
 <body>
-    <img src="/frontend/public/assets/cover-bem.png" alt="Gambar UKM">
+    <header class="header">
+        <a href="#" class="back-button">
+            ← Detail PMC
+        </a>
+    </header>
+
+    <div class="main-container">
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li class="active">Program Kerja Panggung Rakyat</li>
+                <li>Kegiatan Mangan Turu</li>
+                <li>Rapat Bulanan</li>
+                <li>Kegiatan Sosial</li>
+            </ul>
+        </aside>
+
+        <main class="content">
+            <div class="organization-banner">
+                <img src="/api/placeholder/1200/400" alt="Banner Organisasi">
+            </div>
+
+            <div class="program-card">
+                <div class="program-header">
+                    <div>
+                        <h2 class="program-title">Program Kerja Panggung Rakyat</h2>
+                        <p class="program-date">26 September 2024 • 09:00 WIB</p>
+                    </div>
+                    <span class="status-badge status-pending">Belum terlaksana</span>
+                </div>
+
+                <div class="committee-section">
+                    <h3 class="committee-title">Panitia Program Kerja</h3>
+                    <div class="committee-list">
+                        <div class="committee-item">
+                            <div class="committee-role">Ketua Umum</div>
+                            <div class="committee-name">Fais</div>
+                        </div>
+                        <div class="committee-item">
+                            <div class="committee-role">Wakil Ketua</div>
+                            <div class="committee-name">Safa</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="meetings-section">
+                    <div class="meeting-item" onclick="togglePDF(1)">
+                        <div class="meeting-header">
+                            <span class="meeting-title">Rapat 1</span>
+                            <span class="meeting-date">15 September 2024</span>
+                        </div>
+                        <iframe id="pdf-1" class="pdf-viewer" src="/frontend/public/assets/Prabaswara Shafa A - 4.33.23.2.23.pdf"></iframe>
+                    </div>
+
+                    <div class="meeting-item" onclick="togglePDF(2)">
+                        <div class="meeting-header">
+                            <span class="meeting-title">Rapat 2</span>
+                            <span class="meeting-date">20 September 2024</span>
+                        </div>
+                        <iframe id="pdf-2" class="pdf-viewer" src="path-to-your-pdf-2.pdf"></iframe>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function togglePDF(id) {
+            const pdf = document.getElementById(`pdf-${id}`);
+            if (pdf.style.display === 'block') {
+                pdf.style.display = 'none';
+            } else {
+                // Hide all PDFs first
+                document.querySelectorAll('.pdf-viewer').forEach(viewer => {
+                    viewer.style.display = 'none';
+                });
+                // Show the selected PDF
+                pdf.style.display = 'block';
+            }
+        }
+    </script>
 </body>
 </html>
