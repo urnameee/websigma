@@ -13,31 +13,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($data['username']) && isset($d
     $password = $data['password'];
 
     // Query untuk mencari user di database
-    $stmt = $pdo->prepare("SELECT * FROM user_login WHERE username = :username AND password = :password");
+    $stmt = $pdo->prepare("SELECT * FROM user_login WHERE username = :username");
     $stmt->bindParam(':username', $username);
-    $stmt->bindParam(':password', $password); // Password tidak di-hash sesuai preferensi kamu
     $stmt->execute();
 
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
+    // Cek apakah user ditemukan
     if ($user) {
-        // Simpan informasi user ke session
-        $_SESSION['id_login'] = $user['id_login'];
-        $_SESSION['username'] = $user['username'];
-        $_SESSION['role'] = $user['role'];
+        // Bandingkan password secara langsung
+        if ($password === $user['password']) { // Bandingkan langsung tanpa hashing
+            // Simpan informasi user ke session
+            $_SESSION['id_login'] = $user['id_login'];
+            $_SESSION['username'] = $user['username'];
+            $_SESSION['role'] = $user['role'];
 
-        // Kirim response sukses dalam format JSON
-        echo json_encode([
-            'status' => 'success',
-            'message' => 'Login berhasil',
-            'user' => [
-                'id_login' => $user['id_login'],
-                'username' => $user['username'],
-                'role' => $user['role']
-            ]
-        ]);
+            // Kirim response sukses dalam format JSON
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'Login berhasil',
+                'user' => [
+                    'id_login' => $user['id_login'],
+                    'username' => $user['username'],
+                    'role' => $user['role']
+                ]
+            ]);
+        } else {
+            // Jika password salah
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Username atau password salah'
+            ]);
+        }
     } else {
-        // Jika login gagal, kirim response error
+        // Jika user tidak ditemukan
         echo json_encode([
             'status' => 'error',
             'message' => 'Username atau password salah'

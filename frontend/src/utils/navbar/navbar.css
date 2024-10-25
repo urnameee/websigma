@@ -11,9 +11,9 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 2rem;
-    background-color: #ffffff;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 0.55rem 2rem;
+    background-color: #fdf9e3;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     position: fixed;
     top: 0;
     left: 0;
@@ -44,10 +44,10 @@ body {
 }
 
 .nav-link {
-    color: #333;
+    color: #161D6F;
     text-decoration: none;
     font-weight: 600;
-    font-size: 20px;
+    font-size: 16px;
     transition: color 0.3s ease;
 }
 
@@ -73,7 +73,7 @@ body {
 /* Responsif untuk ukuran layar desktop */
 @media screen and (max-width: 1024px) {
     .nav-link {
-        font-size: 18px;
+        font-size: 15px;
     }
 }
 
@@ -117,12 +117,18 @@ body {
     }
 
     .nav-link {
-        font-size: 24px;
+        font-size: 20px;
         color: #00274D;
         text-decoration: none;
         font-weight: bold;
         padding: 0.75rem;
         display: block;
+    }
+
+    .bar {
+        width: 25px; /* Dikurangi dari 30px menjadi 25px */
+        height: 3px; /* Dikurangi dari 4px menjadi 3px */
+        margin: 4px auto; /* Dikurangi dari 5px menjadi 4px */
     }
 }
 
@@ -141,4 +147,8 @@ body {
 /* Styling untuk elemen body dan menu saat dalam mode mobile */
 body.mobile-menu-active {
     overflow: hidden;
+}
+
+.content-wrapper {
+    margin-top: 70px; /* Sesuaikan dengan tinggi navbar baru */
 }

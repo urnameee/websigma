@@ -59,10 +59,12 @@
             .then(response => response.json())
             .then(data => {
                 if (data.length > 0) {
-                    // Assume we're taking the first student's data
+                    // Ambil data pengguna yang sesuai
                     const student = data[0];
                     document.getElementById('profileName').innerText = student.nama_lengkap;
                     document.getElementById('profileNim').innerText = student.nim;
+                } else {
+                    console.error('No data found or user not logged in.');
                 }
             })
             .catch(error => console.error('Error fetching data:', error));
