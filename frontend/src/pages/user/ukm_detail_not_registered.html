@@ -1,152 +1,177 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detail UKM - BEM</title>
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/frontend/src/styles/user/ukm_detail_not_registered.css">
-    <link rel="stylesheet" href="/frontend/src/utils/navbar/navbar.css">
-</head>
-<body>
-    <div id="navbar"></div>
+    <!DOCTYPE html>
+    <html lang="id">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Detail UKM - BEM</title>
+        <link href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="/frontend/src/styles/user/ukm_detail_not_registered.css">
+        <link rel="stylesheet" href="/frontend/src/utils/navbar/navbar.css">
+    </head>
+    <body>
+        <div id="navbar"></div>
 
-    <div class="hero-section">
-        <img src="/frontend/public/assets/cover-bem.png" alt="BEM Banner" class="hero-banner">
-        <div class="hero-overlay"></div>
-        <div class="hero-content">
-            <h1>Badan Eksekutif Mahasiswa</h1>
-        </div>
-    </div>
-
-    <div class="content-container">
-        <div class="info-box">
-            <div class="tab-buttons">
-                <button class="tab-btn active" onclick="showContent('visi')">Visi</button>
-                <button class="tab-btn" onclick="showContent('misi')">Misi</button>
+        <div class="hero-section">
+            <img src="/frontend/public/assets/cover-bem.png" alt="BEM Banner" class="hero-banner">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <h1>Badan Eksekutif Mahasiswa</h1>
             </div>
-            
-            <div class="content-sections">
-                <div id="visi" class="content active">
-                    <h3>"Akselerasi BEM KBM Polines yang adaptif, responsif, dan inovatif untuk kemajuan Polines dan Indonesia."</h3>
-                    
-                    <h4>Akselerasi</h4>
-                    <p><em>akselerasi/ak.se.le.ra.si//akselerasi/</em> n 1 proses mempercepat; 2 peningkatan kecepatan; percepatan; 3 laju perubahan kecepatan</p>
-                    <p>Dalam visi BEM KBM Polines, akselerasi mengacu pada upaya mempercepat berbagai program dan kegiatan yang dirancang untuk mendukung kemajuan Polines. Ini mencakup percepatan dalam pengembangan keterampilan mahasiswa, implementasi teknologi, serta penyelesaian berbagai proyek dan inisiatif yang bermanfaat bagi civitas akademika. BEM KBM Polines berkomitmen untuk tidak hanya bergerak cepat tetapi juga efisien dalam mencapai tujuan.</p>
+        </div>
 
-                    <h4>Adaptif</h4>
-                    <p><em>adaptif/adap.tif/</em> a mudah menyesuaikan (diri) dengan keadaan</p>
-                    <p>Adaptif dalam konteks visi ini berarti BEM KBM Polines harus mampu menyesuaikan diri dengan berbagai perubahan dan dinamika yang terjadi di lingkungan internal dan eksternal. Hal ini mencakup respons terhadap perkembangan teknologi, perubahan kebijakan pendidikan, serta tuntutan dan kebutuhan mahasiswa yang terus berkembang. Kemampuan untuk beradaptasi memastikan bahwa BEM KBM Polines tetap relevan dan efektif dalam menghadapi tantangan.</p>
+        <div class="content-container">
+            <div class="info-box">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="showContent('visi')">Visi</button>
+                    <button class="tab-btn" onclick="showContent('misi')">Misi</button>
                 </div>
                 
-                <div id="misi" class="content">
-                    <ol class="mission-list">
-                        <li>Meningkatkan keimanan dan ketakwaan kepada Tuhan yang Maha Esa
-                            <ul>
-                                <li>Memperkuat hubungan dengan POLRI</li>
-                                <li>Menjaga keamanan dan ketertiban</li>
-                                <li>Menjaga kebersihan sosial dan lingkungan</li>
-                                <li>Memberikan informasi dan mendukung aturan berkarya</li>
-                            </ul>
-                        </li>
-                        <li>Mengoptimalkan Tata Kelola Organisasi yang Progresif, Inovatif, dan Profesional
-                            <ul>
-                                <li>Membangun personalia yang kuat dan harmonis antar fungsionaris baik internal kepengurusan dan seluruh fungsionaris BEM KBM Polines</li>
-                                <li>Mengoptimalkan program kerja dan mengembangkan talenta bagi anggota</li>
-                            </ul>
-                        </li>
-                        <li>Meningkatkan Sinergitas dan elemen internal dan Eksternal BEM Polines
-                            <ul>
-                                <li>Membangun dan menjalin sinergitas yang harmonis antar lini kemahasiswaan di dalam BEM KBM Polines</li>
-                            </ul>
-                        </li>
-                    </ol>
+                <div class="content-sections">
+                    <div id="visi" class="content active">
+                        <h3>"Akselerasi BEM KBM Polines yang adaptif, responsif, dan inovatif untuk kemajuan Polines dan Indonesia."</h3>
+                        
+                        <h4>Akselerasi</h4>
+                        <p><em>akselerasi/ak.se.le.ra.si//akselerasi/</em> n 1 proses mempercepat; 2 peningkatan kecepatan; percepatan; 3 laju perubahan kecepatan</p>
+                        <p>Dalam visi BEM KBM Polines, akselerasi mengacu pada upaya mempercepat berbagai program dan kegiatan yang dirancang untuk mendukung kemajuan Polines. Ini mencakup percepatan dalam pengembangan keterampilan mahasiswa, implementasi teknologi, serta penyelesaian berbagai proyek dan inisiatif yang bermanfaat bagi civitas akademika. BEM KBM Polines berkomitmen untuk tidak hanya bergerak cepat tetapi juga efisien dalam mencapai tujuan.</p>
+
+                        <h4>Adaptif</h4>
+                        <p><em>adaptif/adap.tif/</em> a mudah menyesuaikan (diri) dengan keadaan</p>
+                        <p>Adaptif dalam konteks visi ini berarti BEM KBM Polines harus mampu menyesuaikan diri dengan berbagai perubahan dan dinamika yang terjadi di lingkungan internal dan eksternal. Hal ini mencakup respons terhadap perkembangan teknologi, perubahan kebijakan pendidikan, serta tuntutan dan kebutuhan mahasiswa yang terus berkembang. Kemampuan untuk beradaptasi memastikan bahwa BEM KBM Polines tetap relevan dan efektif dalam menghadapi tantangan.</p>
+                    </div>
+                    
+                    <div id="misi" class="content">
+                        <ol class="mission-list">
+                            <li>Meningkatkan keimanan dan ketakwaan kepada Tuhan yang Maha Esa
+                                <ul>
+                                    <li>Memperkuat hubungan dengan POLRI</li>
+                                    <li>Menjaga keamanan dan ketertiban</li>
+                                    <li>Menjaga kebersihan sosial dan lingkungan</li>
+                                    <li>Memberikan informasi dan mendukung aturan berkarya</li>
+                                </ul>
+                            </li>
+                            <li>Mengoptimalkan Tata Kelola Organisasi yang Progresif, Inovatif, dan Profesional
+                                <ul>
+                                    <li>Membangun personalia yang kuat dan harmonis antar fungsionaris baik internal kepengurusan dan seluruh fungsionaris BEM KBM Polines</li>
+                                    <li>Mengoptimalkan program kerja dan mengembangkan talenta bagi anggota</li>
+                                </ul>
+                            </li>
+                            <li>Meningkatkan Sinergitas dan elemen internal dan Eksternal BEM Polines
+                                <ul>
+                                    <li>Membangun dan menjalin sinergitas yang harmonis antar lini kemahasiswaan di dalam BEM KBM Polines</li>
+                                </ul>
+                            </li>
+                        </ol>
+                    </div>
                 </div>
             </div>
+        </div>
+
+        <div class="org-structure-section">
+            <h2>Struktur Organisasi</h2>
+            <div class="org-chart">
+                <div class="org-member">
+                    <div class="org-member-image">
+                        <img src="/frontend/public/assets/dirga.jpg" alt="Dirga Priyatno" />
+                    </div>
+                    <div class="org-member-info">
+                        <h3>Dirga Priyatno</h3>
+                        <p>Presiden Mahasiswa</p>
+                        <p>Tahun Periode 2025/2026</p>
+                    </div>
+                </div>
+                <div class="org-member">
+                    <div class="org-member-image">
+                        <img src="/frontend/public/assets/dirga1.jpg" alt="Shafa Tegal" />
+                    </div>
+                    <div class="org-member-info">
+                        <h3>Shafa Tegal</h3>
+                        <p>Wakil Presiden Mahasiswa</p>
+                        <p>Tahun Periode 2025/2026</p>
+                    </div>
+                </div>
+                <div class="org-member">
+                    <div class="org-member-image">
+                        <img src="/frontend/public/assets/1.jpg" alt="Faiz Suhu" />
+                    </div>
+                    <div class="org-member-info">
+                        <h3>Faiz Suhu</h3>
+                        <p>Deputi Kementrian</p>
+                        <p>Tahun Periode 2025/2026</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <!-- Sebelum registration-cta, tambahkan section gallery -->
+    <div class="gallery-section">
+        <h2>Galeri Kegiatan</h2>
+        <div class="carousel-container">
+            <div class="carousel-track">
+                <div class="carousel-slide">
+                    <img src="/frontend/public/assets/tew.jpg" alt="Kegiatan 1">
+                    <div class="slide-description">
+                        <h3>MAKRAB AWAL</h3>
+                        <p>Acara keluargaan untuk menjalin kerukunan dan saling mengenal antar pengurus UKM PCC.</p>
+                    </div>
+                </div>
+                <div class="carousel-slide active">
+                    <img src="/frontend/public/assets/mew.jpg" alt="Kegiatan 2">
+                    <div class="slide-description">
+                        <h3>OPEN HOUSE</h3>
+                        <p>Memperkenalkan lebih dalam UKM PCC dan kegiatan-kegiatannya kepada calon anggota.</p>
+                    </div>
+                </div>
+                <div class="carousel-slide">
+                    <img src="/frontend/public/assets/kuw.jpg" alt="Kegiatan 3">
+                    <div class="slide-description">
+                        <h3>PENDAS & PAB</h3>
+                        <p>Memberikan pendidikan dasar dan pembekalan kepada calon anggota aktif UKM PCC.</p>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-button prev">&lt;</button>
+            <button class="carousel-button next">&gt;</button>
         </div>
     </div>
 
-    <div class="org-structure-section">
-        <h2>Struktur Organisasi</h2>
-        <div class="org-chart">
-            <div class="org-member">
-                <div class="org-member-image">
-                    <img src="/frontend/public/assets/dirga.jpg" alt="Dirga Priyatno" />
-                </div>
-                <div class="org-member-info">
-                    <h3>Dirga Priyatno</h3>
-                    <p>Presiden Mahasiswa</p>
-                    <p>Tahun Periode 2025/2026</p>
-                </div>
+        <section class="registration-cta">
+            <div class="cta-image">
+                <img src="/frontend/public/assets/daftar.png" alt="Ilustrasi Pendaftaran" />
             </div>
-            <div class="org-member">
-                <div class="org-member-image">
-                    <img src="/frontend/public/assets/dirga1.jpg" alt="Shafa Tegal" />
-                </div>
-                <div class="org-member-info">
-                    <h3>Shafa Tegal</h3>
-                    <p>Wakil Presiden Mahasiswa</p>
-                    <p>Tahun Periode 2025/2026</p>
-                </div>
+            <div class="cta-content">
+                <h2>Ayo Daftarkan Dirimu Sekarang!</h2>
+                <p>Ndang daftar su.</p>
+                
+                    <a href="/frontend/src/pages/user/form_daftar1.html"><button class="cta-button">Daftar</button></a>
             </div>
-            <div class="org-member">
-                <div class="org-member-image">
-                    <img src="/frontend/public/assets/1.jpg" alt="Faiz Suhu" />
-                </div>
-                <div class="org-member-info">
-                    <h3>Faiz Suhu</h3>
-                    <p>Deputi Kementrian</p>
-                    <p>Tahun Periode 2025/2026</p>
-                </div>
-            </div>
-        </div>
-    </div>
+        </section>
 
-<!-- Sebelum registration-cta, tambahkan section gallery -->
-<div class="gallery-section">
-    <h2>Galeri Kegiatan</h2>
-    <div class="carousel-container">
-        <div class="carousel-track">
-            <div class="carousel-slide">
-                <img src="/frontend/public/assets/tew.jpg" alt="Kegiatan 1">
-                <div class="slide-description">
-                    <h3>MAKRAB AWAL</h3>
-                    <p>Acara keluargaan untuk menjalin kerukunan dan saling mengenal antar pengurus UKM PCC.</p>
-                </div>
-            </div>
-            <div class="carousel-slide active">
-                <img src="/frontend/public/assets/mew.jpg" alt="Kegiatan 2">
-                <div class="slide-description">
-                    <h3>OPEN HOUSE</h3>
-                    <p>Memperkenalkan lebih dalam UKM PCC dan kegiatan-kegiatannya kepada calon anggota.</p>
-                </div>
-            </div>
-            <div class="carousel-slide">
-                <img src="/frontend/public/assets/kuw.jpg" alt="Kegiatan 3">
-                <div class="slide-description">
-                    <h3>PENDAS & PAB</h3>
-                    <p>Memberikan pendidikan dasar dan pembekalan kepada calon anggota aktif UKM PCC.</p>
-                </div>
-            </div>
-        </div>
-        <button class="carousel-button prev">&lt;</button>
-        <button class="carousel-button next">&gt;</button>
-    </div>
-</div>
-
-    <section class="registration-cta">
-        <div class="cta-image">
-            <img src="/frontend/public/assets/daftar.png" alt="Ilustrasi Pendaftaran" />
-        </div>
-        <div class="cta-content">
-            <h2>Ayo Daftarkan Dirimu Sekarang!</h2>
-            <p>Ndang daftar su.</p>
+        <script src="/frontend/src/utils/navbar/navbar.js"></script>
+        <script src="/frontend/src/pages/user/bem_galeri.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const idUkm = urlParams.get('id');
             
-                <a href="/frontend/src/pages/user/form_daftar1.html"><button class="cta-button">Daftar</button></a>
-        </div>
-    </section>
-
-    <script src="/frontend/src/utils/navbar/navbar.js"></script>
-    <script src="/frontend/src/pages/user/bem_galeri.js"></script>
-</body>
-</html>
+                if (idUkm) {
+                    fetch(`/backend/controllers/ukm_detail_not_registered.php?id_ukm=${idUkm}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                const ukmData = data.data;
+                                
+                                document.querySelector('.hero-banner').src = `/frontend/public/assets/${ukmData.banner_path}`;
+                                document.querySelector('.hero-content h1').textContent = ukmData.deskripsi;
+                                document.getElementById('visi').innerHTML = `<h3>${ukmData.visi}</h3>`;
+                                document.getElementById('misi').innerHTML = `<p>${ukmData.misi}</p>`;
+                            } else {
+                                console.error('Data UKM tidak ditemukan:', data.message);
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                }
+            });
+            
+        </script>
+    </body>
+    </html>

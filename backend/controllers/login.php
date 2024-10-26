@@ -42,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($data['username']) && isset($d
                 ]);
             }
         } else {
-            echo json_encode([
+            echo json_encode([  
                 'status' => 'error',
                 'message' => 'Username atau password salah'
             ]);

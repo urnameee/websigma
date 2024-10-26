@@ -49,6 +49,7 @@
                 <thead>
                   <tr>
                     <th>Logo</th>
+                    <th>Cover</th>
                     <th>Nama UKM</th>
                     <th>Deskripsi</th>
                     <th>Visi</th>
@@ -117,8 +118,20 @@
                 </div>
                 <small class="text-muted">Format: PNG, Maksimal 5MB</small>
                 <div id="preview-logo" class="mt-2"></div>
+
+                <div class="form-group">
+                  <label for="cover">Cover UKM</label>
+                  <div class="input-group">
+                    <div class="custom-file">
+                      <input type="file" class="custom-file-input" id="cover" name="cover" accept=".jpg,.jpeg,.png">
+                      <label class="custom-file-label" for="cover">Choose file</label>
+                    </div>
+                  </div>
+                  <small class="text-muted">Format: JPG/PNG, Maksimal 5MB</small>
+                  <div id="preview-cover" class="mt-2"></div>
+                </div>
               </div>
-            </div>
+
             <div class="modal-footer justify-content-between">
               <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
               <button type="submit" class="btn btn-primary">Simpan</button>
@@ -173,156 +186,179 @@
 
 <!-- Page specific script -->
 <script>
-$(function () {
-  // Initialize DataTable
-  var table = $('#tabel-ukm').DataTable({
-    "responsive": true,
-    "autoWidth": false,
-    "ajax": {
-      "url": "/backend/controllers/admin/ukm.php?action=get_all",
-      "type": "GET"
-    },
-    "columns": [
-      { 
-        "data": "logo_path",
-        "render": function(data, type, row) {
-          return data ? `<img src="/frontend/public/assets/${data}" height="50">` : '';
-        }
-      },
-      { "data": "nama_ukm" },
-      { "data": "deskripsi" },
-      { "data": "visi" },
-      { "data": "misi" },
-      { 
-        "data": "tanggal_berdiri",
-        "render": function(data) {
-          return moment(data).format('DD/MM/YYYY');
-        }
-      },
-      {
-        "data": null,
-        "render": function(data, type, row) {
-          return `
-            <button class="btn btn-sm btn-info btn-edit" data-id="${row.id_ukm}">
-              <i class="fas fa-edit"></i>
-            </button>
-            <button class="btn btn-sm btn-danger btn-delete" data-id="${row.id_ukm}">
-              <i class="fas fa-trash"></i>
-            </button>
-          `;
-        }
-      }
-    ]
+  $(function() {
+      // Initialize DataTable
+      var table = $('#tabel-ukm').DataTable({
+          "responsive": true,
+          "autoWidth": false,
+          "ajax": {
+              "url": "/backend/controllers/admin/ukm.php?action=get_all",
+              "type": "GET"
+          },
+          "columns": [
+              { 
+                  "data": "logo_path",
+                  "render": function(data, type, row) {
+                      return data ? `<img src="/frontend/public/assets/${data}" height="50">` : '';
+                  }
+              },
+              { 
+                  "data": "banner_path",
+                  "render": function(data, type, row) {
+                      return data ? `<img src="/frontend/public/assets/${data}" height="50">` : '';
+                  }
+              },
+              { "data": "nama_ukm" },
+              { "data": "deskripsi" },
+              { "data": "visi" },
+              { "data": "misi" },
+              { 
+                  "data": "tanggal_berdiri",
+                  "render": function(data) {
+                      return moment(data).format('DD/MM/YYYY');
+                  }
+              },
+              {
+                  "data": null,
+                  "render": function(data, type, row) {
+                      return `
+                          <button class="btn btn-sm btn-info btn-edit" data-id="${row.id_ukm}">
+                              <i class="fas fa-edit"></i>
+                          </button>
+                          <button class="btn btn-sm btn-danger btn-delete" data-id="${row.id_ukm}">
+                              <i class="fas fa-trash"></i>
+                          </button>
+                      `;
+                  }
+              }
+          ]
+      });
+  
+      // Initialize bs-custom-file-input
+      bsCustomFileInput.init();
+  
+      // Initialize Datepicker
+      $('#tanggal_berdiri').daterangepicker({
+          singleDatePicker: true,
+          locale: {
+              format: 'DD/MM/YYYY'
+          }
+      });
+  
+      // Preview Logo
+      $('#logo').change(function() {
+          const file = this.files[0];
+          if (file) {
+              let reader = new FileReader();
+              reader.onload = function(event) {
+                  $('#preview-logo').html(`<img src="${event.target.result}" class="img-fluid" style="max-height: 200px">`);
+              }
+              reader.readAsDataURL(file);
+          }
+      });
+  
+      // Preview Cover
+      $('#cover').change(function() {
+          const file = this.files[0];
+          if (file) {
+              let reader = new FileReader();
+              reader.onload = function(event) {
+                  $('#preview-cover').html(`<img src="${event.target.result}" class="img-fluid" style="max-height: 200px">`);
+              }
+              reader.readAsDataURL(file);
+          }
+      });
+  
+      // Handle form submit
+      $('#form-ukm').on('submit', function(e) {
+          e.preventDefault();
+          const formData = new FormData(this);
+          const mode = $('#form-mode').val();
+          
+          $.ajax({
+              url: `/backend/controllers/admin/ukm.php?action=${mode}`,
+              type: 'POST',
+              data: formData,
+              processData: false,
+              contentType: false,
+              success: function(response) {
+                  if(response.status === 'success') {
+                      $('#modal-form').modal('hide');
+                      table.ajax.reload();
+                      alert('Data berhasil disimpan!');
+                  } else {
+                      alert('Gagal menyimpan data: ' + response.message);
+                  }
+              },
+              error: function() {
+                  alert('Terjadi kesalahan sistem');
+              }
+          });
+      });
+  
+      // Handle edit button
+      $('#tabel-ukm').on('click', '.btn-edit', function() {
+          const id = $(this).data('id');
+          $('#form-mode').val('edit');
+          
+          $.get(`/backend/controllers/admin/ukm.php?action=get_one&id=${id}`, function(data) {
+              $('#id_ukm').val(data.id_ukm);
+              $('#nama_ukm').val(data.nama_ukm);
+              $('#deskripsi').val(data.deskripsi);
+              $('#visi').val(data.visi);
+              $('#misi').val(data.misi);
+              $('#tanggal_berdiri').val(moment(data.tanggal_berdiri).format('DD/MM/YYYY'));
+              
+              if(data.logo_path) {
+                  $('#preview-logo').html(`<img src="/frontend/public/assets/${data.logo_path}" class="img-fluid" style="max-height: 200px">`);
+              }
+              
+              if(data.banner_path) {
+                  $('#preview-cover').html(`<img src="/frontend/public/assets/${data.banner_path}" class="img-fluid" style="max-height: 200px">`);
+              }
+              
+              $('#modal-form').modal('show');
+          });
+      });
+  
+      // Handle delete button
+      $('#tabel-ukm').on('click', '.btn-delete', function() {
+          const id = $(this).data('id');
+          $('#delete-id').val(id);
+          $('#modal-delete').modal('show');
+      });
+  
+      // Handle delete confirmation
+      $('#btn-confirm-delete').on('click', function() {
+          const id = $('#delete-id').val();
+          
+          $.ajax({
+              url: '/backend/controllers/admin/ukm.php?action=delete',
+              type: 'POST',
+              data: { id_ukm: id },
+              success: function(response) {
+                  if(response.status === 'success') {
+                      $('#modal-delete').modal('hide');
+                      table.ajax.reload();
+                      alert('Data berhasil dihapus!');
+                  } else {
+                      alert('Gagal menghapus data: ' + response.message);
+                  }
+              },
+              error: function() {
+                  alert('Terjadi kesalahan sistem');
+              }
+          });
+      });
+  
+      // Reset form when modal is hidden
+      $('#modal-form').on('hidden.bs.modal', function () {
+          $('#form-ukm')[0].reset();
+          $('#preview-logo').html('');
+          $('#preview-cover').html('');
+          $('#form-mode').val('add');
+      });
   });
-
-  // Initialize bs-custom-file-input
-  bsCustomFileInput.init();
-
-  // Initialize Datepicker
-  $('#tanggal_berdiri').daterangepicker({
-    singleDatePicker: true,
-    locale: {
-      format: 'DD/MM/YYYY'
-    }
-  });
-
-  // Preview Image
-  $('#logo').change(function() {
-    const file = this.files[0];
-    if (file) {
-      let reader = new FileReader();
-      reader.onload = function(event) {
-        $('#preview-logo').html(`<img src="${event.target.result}" class="img-fluid" style="max-height: 200px">`);
-      }
-      reader.readAsDataURL(file);
-    }
-  });
-
-  // Handle form submit
-  $('#form-ukm').on('submit', function(e) {
-    e.preventDefault();
-    const formData = new FormData(this);
-    const mode = $('#form-mode').val();
-    
-    $.ajax({
-      url: `/backend/controllers/admin/ukm.php?action=${mode}`,
-      type: 'POST',
-      data: formData,
-      processData: false,
-      contentType: false,
-      success: function(response) {
-        if(response.status === 'success') {
-          $('#modal-form').modal('hide');
-          table.ajax.reload();
-          alert('Data berhasil disimpan!');
-        } else {
-          alert('Gagal menyimpan data: ' + response.message);
-        }
-      },
-      error: function() {
-        alert('Terjadi kesalahan sistem');
-      }
-    });
-  });
-
-  // Handle edit button
-  $('#tabel-ukm').on('click', '.btn-edit', function() {
-    const id = $(this).data('id');
-    $('#form-mode').val('edit');
-    
-    $.get(`/backend/controllers/admin/ukm.php?action=get_one&id=${id}`, function(data) {
-      $('#id_ukm').val(data.id_ukm);
-      $('#nama_ukm').val(data.nama_ukm);
-      $('#deskripsi').val(data.deskripsi);
-      $('#visi').val(data.visi);
-      $('#misi').val(data.misi);
-      $('#tanggal_berdiri').val(moment(data.tanggal_berdiri).format('DD/MM/YYYY'));
-      
-      if(data.logo_path) {
-        $('#preview-logo').html(`<img src="/frontend/public/assets/${data.logo_path}" class="img-fluid" style="max-height: 200px">`);
-      }
-      
-      $('#modal-form').modal('show');
-    });
-  });
-
-  // Handle delete button
-  $('#tabel-ukm').on('click', '.btn-delete', function() {
-    const id = $(this).data('id');
-    $('#delete-id').val(id);
-    $('#modal-delete').modal('show');
-  });
-
-  // Handle delete confirmation
-  $('#btn-confirm-delete').on('click', function() {
-    const id = $('#delete-id').val();
-    
-    $.ajax({
-      url: '/backend/controllers/admin/ukm.php?action=delete',
-      type: 'POST',
-      data: { id_ukm: id },
-      success: function(response) {
-        if(response.status === 'success') {
-          $('#modal-delete').modal('hide');
-          table.ajax.reload();
-          alert('Data berhasil dihapus!');
-        } else {
-          alert('Gagal menghapus data: ' + response.message);
-        }
-      },
-      error: function() {
-        alert('Terjadi kesalahan sistem');
-      }
-    });
-  });
-
-  // Reset form when modal is hidden
-  $('#modal-form').on('hidden.bs.modal', function () {
-    $('#form-ukm')[0].reset();
-    $('#preview-logo').html('');
-    $('#form-mode').val('add');
-  });
-});
-</script>
+  </script>
 </body>
 </html>

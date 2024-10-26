@@ -9,67 +9,119 @@
 <body>
     <div id="navbar"></div>
     <div class="content-container">
+        <!-- Section UKM yang Diikuti -->
         <h2>UKM yang Diikuti</h2>
         <div class="ukm-grid" id="ukm-diikuti">
-            <!-- Data UKM akan diisi oleh JavaScript -->
+            <!-- Data UKM Diikuti akan diisi oleh JavaScript -->
         </div>
 
+        <!-- Section Rekomendasi UKM -->
         <h2>Rekomendasi UKM</h2>
-        <div class="ukm-grid">
-            <a href="/frontend/src/pages/user/ukm_detail_not_registered.html" class="ukm-card">
-                <img src="/frontend/public/assets/logo-bem.png" alt="PP Logo" class="ukm-logo">
-                <div class="ukm-name">PP</div>
-                <div class="ukm-desc">Pengembangan Pengetahuan</div>
-            </a>
-            <a href="#" class="ukm-card">
-                <img src="/api/placeholder/120/120" alt="BPM Logo" class="ukm-logo">
-                <div class="ukm-name">BPM</div>
-                <div class="ukm-desc">Badan Perwakilan Mahasiswa</div>
-            </a>
-            <a href="#" class="ukm-card">
-                <img src="/api/placeholder/120/120" alt="Basket Logo" class="ukm-logo">
-                <div class="ukm-name">Basket</div>
-                <div class="ukm-desc">UKM Bola Basket</div>
-            </a>
-            <a href="#" class="ukm-card">
-                <img src="/api/placeholder/120/120" alt="Fotografi Logo" class="ukm-logo">
-                <div class="ukm-name">Fotografi</div>
-                <div class="ukm-desc">UKM Fotografi</div>
-            </a>
+        <div class="ukm-grid" id="ukm-rekomendasi">
+            <!-- Data Rekomendasi UKM akan diisi oleh JavaScript -->
         </div>
     </div>
+
+    <!-- Scripts -->
     <script src="/frontend/src/utils/navbar/navbar.js"></script>
-    // Tambahkan script ini sebelum closing body tag
-<script>
-fetch('/backend/controllers/get_ukm_diikuti.php')
-    .then(response => response.json())
-    .then(data => {
-        const ukmContainer = document.getElementById('ukm-diikuti');
-        
-        if (Array.isArray(data)) {
-            data.forEach(ukm => {
-                const ukmCard = document.createElement('a');
-                ukmCard.href = "#"; // Nanti bisa disesuaikan dengan link detail UKM
-                ukmCard.className = "ukm-card";
-                
-                ukmCard.innerHTML = `
-                    <img src="/frontend/public/assets/${ukm.logo_path || 'default-logo.png'}" alt="${ukm.nama_ukm} Logo" class="ukm-logo">
-                    <div class="ukm-name">${ukm.nama_ukm}</div>
-                    <div class="ukm-desc">${ukm.deskripsi}</div>
-                    <div class="ukm-periode">Periode ${ukm.tahun_mulai}-${ukm.tahun_selesai}</div>
-                `;
-                
-                ukmContainer.appendChild(ukmCard);
-            });
-        } else {
-            ukmContainer.innerHTML = '<p>Tidak ada UKM yang diikuti</p>';
+    
+    <!-- Script untuk UKM yang Diikuti -->
+    <script>
+        function loadUKMDiikuti() {
+            fetch('/backend/controllers/get_ukm_diikuti.php')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const ukmContainer = document.getElementById('ukm-diikuti');
+                    
+                    if (Array.isArray(data) && data.length > 0) {
+                        ukmContainer.innerHTML = ''; // Bersihkan container
+                        
+                        data.forEach(ukm => {
+                            const ukmCard = document.createElement('a');
+                            ukmCard.href = `/frontend/src/pages/user/ukm_detail_egistered.html?id=${ukm.id_ukm}`;
+                            ukmCard.className = "ukm-card";
+                            
+                            const logoPath = ukm.logo_path || 'default-logo.png';
+                            
+                            ukmCard.innerHTML = `
+                                <img src="/frontend/public/assets/${logoPath}" 
+                                     alt="${ukm.nama_ukm} Logo" 
+                                     class="ukm-logo"
+                                     onerror="this.src='/frontend/public/assets/default-logo.png'">
+                                <div class="ukm-name">${ukm.nama_ukm}</div>
+                                <div class="ukm-desc">${ukm.deskripsi || 'Tidak ada deskripsi'}</div>
+                                <div class="ukm-periode">Periode ${ukm.tahun_mulai}-${ukm.tahun_selesai}</div>
+                            `;
+                            
+                            ukmContainer.appendChild(ukmCard);
+                        });
+                    } else {
+                        ukmContainer.innerHTML = '<p class="no-data">Anda belum mengikuti UKM apapun</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('ukm-diikuti').innerHTML = 
+                        '<p class="error-message">Terjadi kesalahan saat memuat data UKM</p>';
+                });
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        document.getElementById('ukm-diikuti').innerHTML = 
-            '<p>Terjadi kesalahan saat memuat data UKM</p>';
-    });
-</script>
+    </script>
+
+    <!-- Script untuk Rekomendasi UKM -->
+    <script>
+        function loadUKMRekomendasi() {
+            fetch('/backend/controllers/get_ukm_rekomendasi.php')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(response => {
+                    const ukmContainer = document.getElementById('ukm-rekomendasi');
+                    
+                    if (response.status === 'success' && response.data && response.data.length > 0) {
+                        ukmContainer.innerHTML = ''; // Bersihkan container
+                        
+                        response.data.forEach(ukm => {
+                            const ukmCard = document.createElement('a');
+                            ukmCard.href = `/frontend/src/pages/user/ukm_detail_not_registered.html?id=${ukm.id_ukm}`;
+                            ukmCard.className = "ukm-card";
+                            
+                            const logoPath = ukm.logo_path || 'default-logo.png';
+                            
+                            ukmCard.innerHTML = `
+                                <img src="/frontend/public/assets/${logoPath}" 
+                                     alt="${ukm.nama_ukm} Logo" 
+                                     class="ukm-logo"
+                                     onerror="this.src='/frontend/public/assets/default-logo.png'">
+                                <div class="ukm-name">${ukm.nama_ukm}</div>
+                                <div class="ukm-desc">${ukm.deskripsi || 'Tidak ada deskripsi'}</div>
+                            `;
+                            
+                            ukmContainer.appendChild(ukmCard);
+                        });
+                    } else {
+                        ukmContainer.innerHTML = '<p class="no-data">Tidak ada rekomendasi UKM saat ini</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    ukmContainer.innerHTML = 
+                        '<p class="error-message">Terjadi kesalahan saat memuat rekomendasi UKM</p>';
+                });
+        }
+
+        // Panggil kedua fungsi saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+            loadUKMDiikuti();
+            loadUKMRekomendasi();
+        });
+    </script>
 </body>
 </html>

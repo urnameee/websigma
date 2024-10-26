@@ -7,7 +7,40 @@
     <link rel="stylesheet" href="/frontend/src/styles/user/profile.css">
 </head>
 <body>
+    <style>
+        /* CSS untuk tombol logout */
+        .logout-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
 
+        .logout-button {
+            background-color: #ff4b4b; /* Warna merah untuk menandakan logout */
+            color: #ffffff;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .logout-button:hover {
+            background-color: #e04040; /* Warna sedikit lebih gelap saat di-hover */
+        }
+
+        .logout-button:active {
+            background-color: #c03939; /* Warna lebih gelap saat ditekan */
+        }
+
+        .logout-button:focus {
+            outline: none; /* Hilangkan outline default */
+            box-shadow: 0 0 0 3px rgba(255, 75, 75, 0.5); /* Shadow merah muda untuk fokus */
+        }
+
+    </style>
     <div id="navbar"></div>
 
     <div class="cover-container">
@@ -49,6 +82,11 @@
                     <!-- Add more cards as needed -->
                 </div>
             </div>
+
+            <!-- Logout Button -->
+            <div class="logout-container">
+                <button onclick="logout()" class="logout-button">Logout</button>
+            </div>
         </div>
     </div>
 
@@ -59,15 +97,22 @@
             .then(response => response.json())
             .then(data => {
                 if (data.length > 0) {
-                    // Ambil data pengguna yang sesuai
+                    // Assume we're taking the first student's data
                     const student = data[0];
                     document.getElementById('profileName').innerText = student.nama_lengkap;
                     document.getElementById('profileNim').innerText = student.nim;
-                } else {
-                    console.error('No data found or user not logged in.');
                 }
             })
             .catch(error => console.error('Error fetching data:', error));
+
+        // Logout function
+        function logout() {
+            fetch('/backend/controllers/logout.php')
+                .then(() => {
+                    window.location.href = "/frontend/src/pages/user/login_page.html";
+                })
+                .catch(error => console.error('Error logging out:', error));
+        }
     </script>
 
 </body>

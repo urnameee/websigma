@@ -159,6 +159,38 @@ body {
     .ukm-box {
         max-width: 100%;
     }
+
+    .logout-section {
+        width: 100%;
+        max-width: 800px;
+        margin: 20px 0;
+        display: flex;
+        justify-content: center;
+    }
+
+    .logout-button {
+        background-color: #ff4444;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 12px 24px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: background-color 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .logout-button:hover {
+        background-color: #ff1111;
+    }
+
+    .logout-button i {
+        font-size: 18px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -185,5 +217,14 @@ body {
 
     .ukm-box {
         max-width: 100%;
+    }
+
+    .logout-button {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+    
+    .logout-button i {
+        font-size: 16px;
     }
 }
