@@ -89,3 +89,22 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
 document.getElementById('errorMessageContainer').addEventListener('click', function() {
     this.style.display = 'none';
 });
+
+// agar berwarna saat di klik
+document.addEventListener("DOMContentLoaded", function () {
+    const loginForm = document.getElementById("loginForm");
+    const loginButton = document.getElementById("loginButton");
+
+    loginForm.addEventListener("input", function () {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        if (username && password) {
+            loginButton.classList.add("active");
+            loginButton.disabled = false;
+        } else {
+            loginButton.classList.remove("active");
+            loginButton.disabled = true;
+        }
+    });
+});

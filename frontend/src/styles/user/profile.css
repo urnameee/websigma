@@ -133,6 +133,38 @@ body {
     color: #666;
 }
 
+/* CSS untuk tombol logout */
+.logout-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.logout-button {
+    background-color: #ff4b4b; /* Warna merah untuk menandakan logout */
+    color: #ffffff;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+    background-color: #e04040; /* Warna sedikit lebih gelap saat di-hover */
+}
+
+.logout-button:active {
+    background-color: #c03939; /* Warna lebih gelap saat ditekan */
+}
+
+.logout-button:focus {
+    outline: none; /* Hilangkan outline default */
+    box-shadow: 0 0 0 3px rgba(255, 75, 75, 0.5); /* Shadow merah muda untuk fokus */
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .cover-container {
