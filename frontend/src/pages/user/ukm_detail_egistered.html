@@ -3,336 +3,224 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detail PMC - Program Kerja</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-
-        body {
-            background-color: #f5f5f5;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .header {
-            background-color: #fff;
-            padding: 16px 32px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            height: 60px;
-            display: flex;
-            align-items: center;
-        }
-
-        .back-button {
-            text-decoration: none;
-            color: #333;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 16px;
-        }
-
-        .main-container {
-            display: flex;
-            height: calc(100vh - 60px);
-            margin-top: 60px;
-        }
-
-        .sidebar {
-            width: 300px;
-            background: #fff;
-            border-right: 1px solid #eee;
-            padding: 20px;
-            height: 100%;
-            overflow-y: auto;
-            position: fixed;
-            left: 0;
-        }
-
-        .content {
-            flex: 1;
-            margin-left: 300px;
-            padding: 32px;
-            overflow-y: auto;
-            height: calc(100vh - 60px);
-        }
-
-        .organization-banner {
-            width: 100%;
-            margin-bottom: 24px;
-        }
-
-        .organization-banner img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-
-        .program-card {
-            background: #fff;
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-
-        .program-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 16px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .program-title {
-            font-size: 24px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        .program-date {
-            font-size: 16px;
-            color: #666;
-            margin-top: 8px;
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .status-pending {
-            background-color: #fff3e0;
-            color: #ff9800;
-        }
-
-        .status-completed {
-            background-color: #e8f5e9;
-            color: #4caf50;
-        }
-
-        .committee-section {
-            margin: 24px 0;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 12px;
-        }
-
-        .committee-title {
-            font-size: 18px;
-            color: #333;
-            margin-bottom: 16px;
-        }
-
-        .committee-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-        }
-
-        .committee-item {
-            padding: 16px;
-            background: #fff;
-            border-radius: 8px;
-            border: 1px solid #eee;
-        }
-
-        .committee-role {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 4px;
-        }
-
-        .committee-name {
-            font-size: 16px;
-            font-weight: 500;
-            color: #333;
-        }
-
-        .meetings-section {
-            margin-top: 24px;
-        }
-
-        .meeting-item {
-            padding: 16px;
-            border: 1px solid #eee;
-            border-radius: 12px;
-            margin-bottom: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .meeting-item:hover {
-            background-color: #f8f9fa;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
-        .meeting-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .meeting-title {
-            font-size: 18px;
-            font-weight: 500;
-            color: #333;
-        }
-
-        .meeting-date {
-            font-size: 14px;
-            color: #666;
-        }
-
-        .pdf-viewer {
-            margin-top: 16px;
-            width: 100%;
-            height: 600px;
-            border: none;
-            border-radius: 12px;
-            display: none;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
-        .pdf-viewer.active {
-            display: block;
-        }
-
-        .sidebar-menu {
-            list-style: none;
-        }
-
-        .sidebar-menu li {
-            padding: 12px 16px;
-            margin-bottom: 8px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .sidebar-menu li:hover {
-            background-color: #f0f0f0;
-        }
-
-        .sidebar-menu li.active {
-            background-color: #e3f2fd;
-            color: #1976d2;
-            font-weight: 500;
-        }
-
-        @media (max-width: 1024px) {
-            .sidebar {
-                width: 250px;
-            }
-            .content {
-                margin-left: 250px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                display: none;
-            }
-            .content {
-                margin-left: 0;
-            }
-        }
-    </style>
+    <title>Detail Program Kerja</title>
+    <link rel="stylesheet" href="/frontend/src/styles/user/ukm_detail_egistered.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/9.3.2/swiper-bundle.min.css">
 </head>
 <body>
     <header class="header">
         <a href="/frontend/src/pages/user/UKM.html" class="back-button">
-            ← Detail PMC
+            ← Detail Program Kerja
         </a>
     </header>
 
     <div class="main-container">
+        <!-- Sidebar Program Kerja -->
         <aside class="sidebar">
-            <ul class="sidebar-menu">
-                <li class="active">Program Kerja Panggung Rakyat</li>
-                <li>Kegiatan Mangan Turu</li>
-                <li>Rapat Bulanan</li>
-                <li>Kegiatan Sosial</li>
+            <ul class="sidebar-menu" id="sidebar-programs">
+                <!-- Data program kerja akan diisi di sini -->
             </ul>
         </aside>
 
         <main class="content">
             <div class="organization-banner">
-                <img src="/api/placeholder/1200/400" alt="Banner Organisasi">
+                <img id="banner-image" src="" alt="Banner Organisasi">
             </div>
 
+            <!-- Detail Program Kerja -->
             <div class="program-card">
                 <div class="program-header">
                     <div>
-                        <h2 class="program-title">Program Kerja Panggung Rakyat</h2>
-                        <p class="program-date">26 September 2024 • 09:00 WIB</p>
+                        <h2 class="program-title" id="program-title"></h2>
+                        <p class="program-date" id="program-date"></p>
                     </div>
-                    <span class="status-badge status-pending">Belum terlaksana</span>
+                    <span class="status-badge" id="program-status"></span>
                 </div>
 
+                <!-- Panitia Program Kerja -->
                 <div class="committee-section">
                     <h3 class="committee-title">Panitia Program Kerja</h3>
-                    <div class="committee-list">
-                        <div class="committee-item">
-                            <div class="committee-role">Ketua Umum</div>
-                            <div class="committee-name">Fais</div>
-                        </div>
-                        <div class="committee-item">
-                            <div class="committee-role">Wakil Ketua</div>
-                            <div class="committee-name">Safa</div>
-                        </div>
+                    <div class="committee-list" id="committee-list">
+                        <!-- Data panitia akan diisi di sini -->
                     </div>
                 </div>
 
-                <div class="meetings-section">
-                    <div class="meeting-item" onclick="togglePDF(1)">
-                        <div class="meeting-header">
-                            <span class="meeting-title">Rapat 1</span>
-                            <span class="meeting-date">15 September 2024</span>
-                        </div>
-                        <iframe id="pdf-1" class="pdf-viewer" src="/frontend/public/assets/Prabaswara Shafa A - 4.33.23.2.23.pdf"></iframe>
-                    </div>
-
-                    <div class="meeting-item" onclick="togglePDF(2)">
-                        <div class="meeting-header">
-                            <span class="meeting-title">Rapat 2</span>
-                            <span class="meeting-date">20 September 2024</span>
-                        </div>
-                        <iframe id="pdf-2" class="pdf-viewer" src="path-to-your-pdf-2.pdf"></iframe>
-                    </div>
+                <!-- Rapat -->
+                <div id="meeting-container">
+                    <!-- Data rapat akan diisi di sini -->
                 </div>
             </div>
         </main>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/9.3.2/swiper-bundle.min.js"></script>
+
     <script>
-        function togglePDF(id) {
-            const pdf = document.getElementById(`pdf-${id}`);
-            if (pdf.style.display === 'block') {
-                pdf.style.display = 'none';
+        // Fungsi untuk mendapatkan parameter dari URL
+        function getUrlParameter(name) {
+            const searchParams = new URLSearchParams(window.location.search);
+            return searchParams.get(name);
+        }
+
+        // Ambil ID timeline dari URL
+        const timelineId = getUrlParameter('id');
+
+        // Fungsi untuk memformat tanggal
+        function formatDate(dateString) {
+            const options = { day: 'numeric', month: 'long', year: 'numeric' };
+            return new Date(dateString).toLocaleDateString('id-ID', options);
+        }
+
+        // Fungsi untuk memformat waktu
+        function formatTime(timeString) {
+            return timeString.substring(0, 5); // Ambil hanya jam:menit
+        }
+
+        // Toggle content rapat
+        function toggleMeetingContent(id) {
+            const content = document.getElementById(`meeting-content-${id}`);
+            if (content.style.display === 'block') {
+                content.style.display = 'none';
             } else {
-                // Hide all PDFs first
-                document.querySelectorAll('.pdf-viewer').forEach(viewer => {
-                    viewer.style.display = 'none';
+                // Hide all meeting contents first
+                document.querySelectorAll('.meeting-content').forEach(item => {
+                    item.style.display = 'none';
                 });
-                // Show the selected PDF
-                pdf.style.display = 'block';
+                // Show the selected meeting content
+                content.style.display = 'block';
             }
+        }
+
+        // Switch tab rapat
+        function switchTab(meetingId, tabName) {
+            // Hide all tab contents for this meeting
+            const meetingContent = document.getElementById(`meeting-content-${meetingId}`);
+            meetingContent.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Deactivate all tab buttons
+            meetingContent.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Show selected tab content and activate button
+            const selectedTab = document.getElementById(`${tabName}-${meetingId}`);
+            const selectedButton = event.target;
+            selectedTab.classList.add('active');
+            selectedButton.classList.add('active');
+        }
+
+        // Fungsi utama untuk mengambil dan menampilkan data
+        async function loadTimelineData() {
+            try {
+                console.log("Fetching data for timeline ID:", timelineId);
+                const response = await fetch(`/backend/controllers/get_timeline_detail.php?id=${timelineId}`);
+                const data = await response.json();
+                console.log("Data dari API:", data);
+
+                if (data.status === 'success') {
+                    // Set Banner
+                    if (data.timeline && data.timeline.banner_path) {
+                        document.getElementById('banner-image').src = `/frontend/public/assets/${data.timeline.banner_path}`;
+                    }
+
+                    // Timeline
+                    if (data.timeline) {
+                        document.getElementById('program-title').textContent = data.timeline.judul_kegiatan || '';
+                        if (data.timeline.tanggal_kegiatan && data.timeline.waktu_mulai) {
+                            document.getElementById('program-date').textContent = 
+                                `${formatDate(data.timeline.tanggal_kegiatan)} • ${formatTime(data.timeline.waktu_mulai)} WIB`;
+                        }
+                    }
+
+                    // Sidebar Programs
+                    if (data.sidebar_programs && data.sidebar_programs.length > 0) {
+                        const sidebarPrograms = document.getElementById('sidebar-programs');
+                        sidebarPrograms.innerHTML = data.sidebar_programs.map(program => `
+                            <li class="${program.id_timeline === timelineId ? 'active' : ''}">
+                                ${program.judul_kegiatan}
+                            </li>
+                        `).join('');
+                    }
+
+                    // Panitia
+                    if (data.panitia && data.panitia.length > 0) {
+                        const committeeList = document.getElementById('committee-list');
+                        committeeList.innerHTML = data.panitia.map(panitia => `
+                            <div class="committee-item">
+                                <div class="committee-role">${panitia.nama_jabatan}</div>
+                                <div class="committee-name">${panitia.nama_lengkap}</div>
+                            </div>
+                        `).join('');
+                    }
+
+                    // Rapat
+                    if (data.rapat && data.rapat.length > 0) {
+                        const meetingContainer = document.getElementById('meeting-container');
+                        meetingContainer.innerHTML = data.rapat.map((rapat, index) => `
+                            <div class="meeting-item">
+                                <div class="meeting-header" onclick="toggleMeetingContent(${index + 1})">
+                                    <span class="meeting-title">${rapat.judul}</span>
+                                    <span class="meeting-date">${formatDate(rapat.tanggal)}</span>
+                                </div>
+                                <div id="meeting-content-${index + 1}" class="meeting-content">
+                                    <div class="meeting-tabs">
+                                        <button class="tab-button active" onclick="switchTab(${index + 1}, 'notes')">Notulensi</button>
+                                        <button class="tab-button" onclick="switchTab(${index + 1}, 'docs')">Dokumentasi</button>
+                                    </div>
+                                    <div id="notes-${index + 1}" class="tab-content active">
+                                        <iframe class="pdf-viewer" src="/frontend/public/assets/${rapat.notulensi_path}"></iframe>
+                                    </div>
+                                    <div id="docs-${index + 1}" class="tab-content">
+                                        <div class="gallery-container">
+                                            <div class="swiper main-swiper">
+                                                <div class="swiper-wrapper">
+                                                    ${rapat.dokumentasi.map(dok => `
+                                                        <div class="swiper-slide">
+                                                            <img src="/frontend/public/assets/${dok.foto_path}" alt="Dokumentasi">
+                                                        </div>
+                                                    `).join('')}
+                                                </div>
+                                                <div class="swiper-button-next"></div>
+                                                <div class="swiper-button-prev"></div>
+                                                <div class="swiper-pagination"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('');
+
+                        // Inisialisasi Swiper untuk setiap galeri
+                        initializeSwipers();
+                    }
+                } else {
+                    console.error("Error loading data:", data.message || "Unknown error");
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        // Load data saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', loadTimelineData);
+
+        // Fungsi untuk menginisialisasi Swiper
+        function initializeSwipers() {
+            document.querySelectorAll('.main-swiper').forEach(element => {
+                new Swiper(element, {
+                    spaceBetween: 10,
+                    navigation: {
+                        nextEl: element.querySelector('.swiper-button-next'),
+                        prevEl: element.querySelector('.swiper-button-prev'),
+                    },
+                    pagination: {
+                        el: element.querySelector('.swiper-pagination'),
+                        clickable: true,
+                    },
+                });
+            });
         }
     </script>
 </body>
