@@ -177,7 +177,7 @@ if (!isset($_SESSION['id_ukm'])) {
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">Rapat Terakhir</h3>
+                                <h3 class="card-title">Rapat yang Sudah dilaksanakan</h3>
                             </div>
                             <div class="card-body">
                                 <div id="latest-meetings">Loading...</div>
@@ -207,29 +207,104 @@ if (!isset($_SESSION['id_ukm'])) {
 <!-- Page specific script -->
 <script>
 $(document).ready(function() {
-    // Function to load dashboard data
-    function loadDashboardData() {
+    function loadTotalAnggota() {
         $.ajax({
-            url: '/backend/controllers/admin-ukm/get-dashboard.php', // URL endpoint untuk mengambil data dashboard
+            url: '/backend/controllers/admin-ukm/get-dashboard.php',
             type: 'GET',
             dataType: 'json',
             success: function(data) {
                 $('#total-anggota').text(data.totalAnggota);
-                $('#total-kegiatan').text(data.totalKegiatan);
-                $('#total-pendaftar').text(data.totalPendaftar);
-                $('#total-rapat').text(data.totalRapat);
-                $('#upcoming-events').html(data.upcomingEvents);
-                $('#latest-meetings').html(data.latestMeetings);
             },
             error: function() {
-                alert('Terjadi kesalahan saat mengambil data dashboard.');
+                alert('Terjadi kesalahan saat mengambil tdata.');
             }
         });
     }
-
     // Load dashboard data on page load
-    loadDashboardData();
+    loadTotalAnggota();
 
+    function loadTotalKegiatan() {
+        $.ajax({
+            url: '/backend/controllers/admin-ukm/get-dashboard.php',
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                $('#total-kegiatan').text(data.totalKegiatan);
+            },
+            error: function() {
+                alert('Terjadi kesalahan saat mengambil tdata.');
+            }
+        });
+    }
+    // Load dashboard data on page load
+    loadTotalKegiatan();
+
+    function loadTotalRapat() {
+        $.ajax({
+            url: '/backend/controllers/admin-ukm/get-dashboard.php',
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                $('#total-rapat').text(data.totalRapat);
+            },
+            error: function() {
+                alert('Terjadi kesalahan saat mengambil data.');
+            }
+        });
+    }
+    // Load dashboard data on page load
+    loadTotalRapat();
+    
+    function loadUpcomingEvents() {
+    $.ajax({
+        url: '/backend/controllers/admin-ukm/get-dashboard.php',
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            if (data.timelines.length > 0) {
+                let eventsHtml = '<ul>';
+                data.timelines.forEach(function(event) {
+                    // Menampilkan judul dan tanggal kegiatan
+                    eventsHtml += `<li>${event.judul_kegiatan} ( ${event.tanggal_kegiatan} )</li>`;
+                });
+                eventsHtml += '</ul>';
+                $('#upcoming-events').html(eventsHtml);
+            } else {
+                $('#upcoming-events').text('Tidak ada kegiatan mendatang.');
+            }
+        },
+        error: function() {
+            $('#upcoming-events').text('Terjadi kesalahan saat mengambil data kegiatan mendatang.');
+        }
+    });
+}
+    loadUpcomingEvents();
+    
+    function loadLatestMeetings() {
+    $.ajax({
+        url: '/backend/controllers/admin-ukm/get-dashboard.php', // Pastikan URL ini mengarah ke endpoint yang tepat
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            if (data.rapatDilaksanakan.length > 0) {
+                let meetingsHtml = '<ul>';
+                data.rapatDilaksanakan.forEach(function(meeting) {
+                    // Menampilkan judul dan tanggal rapat
+                    meetingsHtml += `<li>${meeting.judul} ( ${meeting.tanggal} )</li>`;
+                });
+                meetingsHtml += '</ul>';
+                $('#latest-meetings').html(meetingsHtml);
+            } else {
+                $('#latest-meetings').text('Tidak ada rapat yang sudah dilaksanakan.');
+            }
+        },
+        error: function() {
+            $('#latest-meetings').text('Terjadi kesalahan saat mengambil data rapat yang sudah dilaksanakan.');
+        }
+    });
+}
+loadLatestMeetings();
+    
     // Logout function
     window.logout = function() {
         $.ajax({
