@@ -1,9 +1,10 @@
 <?php
-session_start();
-require_once '../config/config.php';
+session_start(); // Memulai session
+require_once '../config/config.php'; // Menyertakan konfigurasi database
 
 header('Content-Type: application/json');
 
+// Mendapatkan data JSON dari request POST
 $data = json_decode(file_get_contents("php://input"), true);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($data['username']) && isset($data['password'])) {
@@ -11,43 +12,49 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($data['username']) && isset($d
     $password = $data['password'];
 
     try {
-        // Query untuk mencari user dan rolenya di database
-        $stmt = $pdo->prepare("SELECT id_login, username, password, role FROM user_login WHERE username = :username");
+        // Menyiapkan query untuk mendapatkan user berdasarkan username
+        $stmt = $pdo->prepare("SELECT id_login, username, password, role, id_ukm FROM user_login WHERE username = :username");
         $stmt->bindParam(':username', $username);
         $stmt->execute();
 
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
+        // Memeriksa apakah user ditemukan dan password cocok
         if ($user) {
-            if ($password === $user['password']) {
-                // Set session variables
+            if ($password === $user['password']) { // Perlu hashing di produksi
+                // Menyimpan data login di session
                 $_SESSION['id_login'] = $user['id_login'];
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['role'] = $user['role'];
+                $_SESSION['id_ukm'] = $user['role'] === 'admin_ukm' ? $user['id_ukm'] : null;
 
-                // Return success response with user role
+                // Mengembalikan respons berhasil dalam format JSON
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Login berhasil',
                     'user' => [
                         'id_login' => $user['id_login'],
                         'username' => $user['username'],
-                        'role' => $user['role']
+                        'role' => $user['role'],
+                        'id_ukm' => $user['role'] === 'admin_ukm' ? $user['id_ukm'] : null
                     ]
                 ]);
             } else {
+                // Respons jika password salah
                 echo json_encode([
                     'status' => 'error',
                     'message' => 'Username atau password salah'
                 ]);
             }
         } else {
-            echo json_encode([  
+            // Respons jika username tidak ditemukan
+            echo json_encode([
                 'status' => 'error',
                 'message' => 'Username atau password salah'
             ]);
         }
     } catch (PDOException $e) {
+        // Menangani kesalahan server dan menampilkan log
         error_log($e->getMessage());
         echo json_encode([
             'status' => 'error',
@@ -55,6 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($data['username']) && isset($d
         ]);
     }
 } else {
+    // Respons jika request tidak valid
     echo json_encode([
         'status' => 'error',
         'message' => 'Request tidak valid'

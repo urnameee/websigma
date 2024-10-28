@@ -1,4 +1,3 @@
-// login.js
 document.getElementById('username').addEventListener('input', function() {
     const errorMessageContainer = document.getElementById('errorMessageContainer');
     errorMessageContainer.style.display = 'none';
@@ -34,13 +33,20 @@ function validateInput(username, password) {
 }
 
 // Handle role-based redirect
-function handleRoleRedirect(role) {
+function handleRoleRedirect(role, idUkm = null) {
     switch(role.toLowerCase()) {
         case 'mahasiswa':
-            window.location.href = '/frontend/src/pages/user/beranda.html';
+            window.location.href = '/frontend/src/pages/user/beranda.html'; 
             break;
         case 'super_admin':
             window.location.href = '/frontend/src/pages/admin/dashboard.html';
+            break;
+        case 'admin_ukm':
+            if (idUkm) {
+                window.location.href = `/frontend/src/pages/admin-ukm/dashboard.php?id_ukm=${idUkm}`;
+            } else {
+                showErrorMessage('ID UKM tidak ditemukan.');
+            }
             break;
         default:
             showErrorMessage('Role tidak valid');
@@ -68,17 +74,16 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
         });
         
         if (!response.ok) {
-            throw new Error('HTTP error! status: ${response.status}');
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
         
         const result = await response.json();
         
         if (result.status === 'success') {
             document.getElementById('errorMessageContainer').style.display = 'none';
-            // Use the role from the response to determine redirect
-            handleRoleRedirect(result.user.role);
+            handleRoleRedirect(result.user.role, result.user.id_ukm);
         } else {
-            showErrorMessage(result.message || 'Maaf, username atau password yang anda masukan salah.');
+            showErrorMessage(result.message || 'Maaf, username atau password yang anda masukkan salah.');
         }
     } catch (error) {
         console.error('Error:', error);
@@ -86,11 +91,12 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
     }
 });
 
+
 document.getElementById('errorMessageContainer').addEventListener('click', function() {
     this.style.display = 'none';
 });
 
-// agar berwarna saat di klik
+// Mengaktifkan tombol login saat semua input terisi
 document.addEventListener("DOMContentLoaded", function () {
     const loginForm = document.getElementById("loginForm");
     const loginButton = document.getElementById("loginButton");
@@ -108,3 +114,4 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
