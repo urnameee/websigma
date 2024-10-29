@@ -4,8 +4,8 @@ session_start(); // Memulai sesi
 // Periksa apakah pengguna sudah login
 if (!isset($_SESSION['id_ukm'])) {
     // Jika belum login, arahkan ke halaman login
-    header('Location: /index.html'); // Ganti 'login.php' dengan URL halaman login Anda
-    exit(); // Pastikan untuk menghentikan eksekusi skrip setelah pengalihan
+    header('Location: /index.html');
+    exit();
 }
 ?>
 <!DOCTYPE html>
@@ -34,77 +34,8 @@ if (!isset($_SESSION['id_ukm'])) {
         </ul>
     </nav>
 
-    <!-- Main Sidebar Container -->
-    <aside class="main-sidebar sidebar-dark-primary elevation-4">
-        <!-- Brand Logo -->
-        <a href="index.html" class="brand-link">
-            <img src="/frontend/src/pages/admin/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-            <span class="brand-text font-weight-light">Admin UKM</span>
-        </a>
-
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <!-- Sidebar Menu -->
-            <nav class="mt-2">
-                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                    <li class="nav-item">
-                        <a href="admin_ukm_dashboard.html" class="nav-link">
-                            <i class="nav-icon fas fa-tachometer-alt"></i>
-                            <p>Dashboard</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="profile_ukm.html" class="nav-link">
-                            <i class="nav-icon fas fa-university"></i>
-                            <p>Profil UKM</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="struktur_organisasi.html" class="nav-link">
-                            <i class="nav-icon fas fa-sitemap"></i>
-                            <p>Struktur Organisasi</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="timeline_ukm.html" class="nav-link">
-                            <i class="nav-icon fas fa-calendar-alt"></i>
-                            <p>Timeline Kegiatan</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="keanggotaan.html" class="nav-link">
-                            <i class="nav-icon fas fa-users"></i>
-                            <p>Keanggotaan</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="rapat_ukm.html" class="nav-link">
-                            <i class="nav-icon fas fa-comments"></i>
-                            <p>Rapat</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="dokumentasi_kegiatan_ukm.html" class="nav-link">
-                            <i class="nav-icon fas fa-images"></i>
-                            <p>Dokumentasi Kegiatan</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="pendaftaran_ukm.html" class="nav-link">
-                            <i class="nav-icon fas fa-user-plus"></i>
-                            <p>Pendaftaran</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link" onclick="logout()">
-                            <i class="nav-icon fas fa-sign-out-alt"></i>
-                            <p>Logout</p>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </aside>
+    <!-- Sidebar Container -->
+    <div id="sidebar-container"></div>
 
     <!-- Content Wrapper -->
     <div class="content-wrapper">
@@ -204,7 +135,20 @@ if (!isset($_SESSION['id_ukm'])) {
 <!-- AdminLTE App -->
 <script src="/frontend/src/pages/admin/dist/js/adminlte.min.js"></script>
 
-<!-- Page specific script -->
+<!-- Import Sidebar Manager -->
+<script type="module">
+    import SidebarManager from '/frontend/src/pages/admin-ukm/js/sidebar.js';
+    window.SidebarManager = SidebarManager; // Make it globally available
+</script>
+
+<!-- Initialize Sidebar -->
+<script type="module">
+    document.addEventListener('DOMContentLoaded', function() {
+        SidebarManager.init();
+    });
+</script>
+
+<!-- Dashboard specific script -->
 <script>
 $(document).ready(function() {
     function loadTotalAnggota() {
@@ -216,12 +160,10 @@ $(document).ready(function() {
                 $('#total-anggota').text(data.totalAnggota);
             },
             error: function() {
-                alert('Terjadi kesalahan saat mengambil tdata.');
+                alert('Terjadi kesalahan saat mengambil data.');
             }
         });
     }
-    // Load dashboard data on page load
-    loadTotalAnggota();
 
     function loadTotalKegiatan() {
         $.ajax({
@@ -232,12 +174,10 @@ $(document).ready(function() {
                 $('#total-kegiatan').text(data.totalKegiatan);
             },
             error: function() {
-                alert('Terjadi kesalahan saat mengambil tdata.');
+                alert('Terjadi kesalahan saat mengambil data.');
             }
         });
     }
-    // Load dashboard data on page load
-    loadTotalKegiatan();
 
     function loadTotalRapat() {
         $.ajax({
@@ -252,73 +192,66 @@ $(document).ready(function() {
             }
         });
     }
-    // Load dashboard data on page load
-    loadTotalRapat();
     
     function loadUpcomingEvents() {
-    $.ajax({
-        url: '/backend/controllers/admin-ukm/get-dashboard.php',
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            if (data.timelines.length > 0) {
-                let eventsHtml = '<ul>';
-                data.timelines.forEach(function(event) {
-                    // Menampilkan judul dan tanggal kegiatan
-                    eventsHtml += `<li>${event.judul_kegiatan} ( ${event.tanggal_kegiatan} )</li>`;
-                });
-                eventsHtml += '</ul>';
-                $('#upcoming-events').html(eventsHtml);
-            } else {
-                $('#upcoming-events').text('Tidak ada kegiatan mendatang.');
-            }
-        },
-        error: function() {
-            $('#upcoming-events').text('Terjadi kesalahan saat mengambil data kegiatan mendatang.');
-        }
-    });
-}
-    loadUpcomingEvents();
-    
-    function loadLatestMeetings() {
-    $.ajax({
-        url: '/backend/controllers/admin-ukm/get-dashboard.php', // Pastikan URL ini mengarah ke endpoint yang tepat
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            if (data.rapatDilaksanakan.length > 0) {
-                let meetingsHtml = '<ul>';
-                data.rapatDilaksanakan.forEach(function(meeting) {
-                    // Menampilkan judul dan tanggal rapat
-                    meetingsHtml += `<li>${meeting.judul} ( ${meeting.tanggal} )</li>`;
-                });
-                meetingsHtml += '</ul>';
-                $('#latest-meetings').html(meetingsHtml);
-            } else {
-                $('#latest-meetings').text('Tidak ada rapat yang sudah dilaksanakan.');
-            }
-        },
-        error: function() {
-            $('#latest-meetings').text('Terjadi kesalahan saat mengambil data rapat yang sudah dilaksanakan.');
-        }
-    });
-}
-loadLatestMeetings();
-    
-    // Logout function
-    window.logout = function() {
         $.ajax({
-            url: '/backend/controllers/logout.php', // URL endpoint untuk logout
-            type: 'POST',
-            success: function() {
-                window.location.href = '/index.html'; // Arahkan kembali ke halaman login setelah logout
+            url: '/backend/controllers/admin-ukm/get-dashboard.php',
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                if (data.timelines.length > 0) {
+                    let eventsHtml = '<ul>';
+                    data.timelines.forEach(function(event) {
+                        eventsHtml += `<li>${event.judul_kegiatan} ( ${event.tanggal_kegiatan} )</li>`;
+                    });
+                    eventsHtml += '</ul>';
+                    $('#upcoming-events').html(eventsHtml);
+                } else {
+                    $('#upcoming-events').text('Tidak ada kegiatan mendatang.');
+                }
             },
             error: function() {
-                alert('Terjadi kesalahan saat logout.');
+                $('#upcoming-events').text('Terjadi kesalahan saat mengambil data kegiatan mendatang.');
             }
         });
-    };
+    }
+    
+    function loadLatestMeetings() {
+        $.ajax({
+            url: '/backend/controllers/admin-ukm/get-dashboard.php',
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                if (data.rapatDilaksanakan.length > 0) {
+                    let meetingsHtml = '<ul>';
+                    data.rapatDilaksanakan.forEach(function(meeting) {
+                        meetingsHtml += `<li>${meeting.judul} ( ${meeting.tanggal} )</li>`;
+                    });
+                    meetingsHtml += '</ul>';
+                    $('#latest-meetings').html(meetingsHtml);
+                } else {
+                    $('#latest-meetings').text('Tidak ada rapat yang sudah dilaksanakan.');
+                }
+            },
+            error: function() {
+                $('#latest-meetings').text('Terjadi kesalahan saat mengambil data rapat yang sudah dilaksanakan.');
+            }
+        });
+    }
+
+    // Load dashboard data on page load
+    loadTotalAnggota();
+    loadTotalKegiatan();
+    loadTotalRapat();
+    loadUpcomingEvents();
+    loadLatestMeetings();
 });
+
+// Global logout function for sidebar
+window.logout = function() {
+    SidebarManager.logout();
+};
 </script>
+
 </body>
 </html>

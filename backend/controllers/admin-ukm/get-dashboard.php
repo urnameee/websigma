@@ -68,8 +68,4 @@ $response['rapatDilaksanakan'] = $stmt->fetchAll(PDO::FETCH_ASSOC); // Mengambil
 
 // Mengembalikan response sebagai JSON
 echo json_encode($response);
-<<<<<<< HEAD
 ?>
-=======
-?>
->>>>>>> 860e3f0788e00a524af5df060bd6638ff0c69d74
