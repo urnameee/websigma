@@ -1,3 +1,13 @@
+<?php
+session_start(); // Memulai sesi
+
+// Periksa apakah pengguna sudah login
+if (!isset($_SESSION['id_ukm'])) {
+    // Jika belum login, arahkan ke halaman login
+    header('Location: /index.html');
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

@@ -1,3 +1,14 @@
+<?php
+session_start(); // Memulai sesi
+
+// Periksa apakah pengguna sudah login
+if (!isset($_SESSION['id_ukm'])) {
+    // Jika belum login, arahkan ke halaman login
+    header('Location: /index.html');
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,6 +24,7 @@
   <link rel="stylesheet" href="/frontend/src/pages/admin/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="/frontend/src/pages/admin/dist/css/adminlte.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css">
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
@@ -79,56 +91,41 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <form id="form-struktur" enctype="multipart/form-data">
-          <input type="hidden" id="id_struktur" name="id_struktur">
-          <div class="modal-body">
-            <div class="form-group">
-              <label for="nim">NIM</label>
-              <select class="form-control" id="nim" name="nim" required>
-                <option value="">Pilih Mahasiswa</option>
-                <option value="43323205">Dirga</option>
-                <!-- Tambah opsi mahasiswa lainnya di sini -->
-              </select>
+          <<form id="form-struktur" enctype="multipart/form-data">
+            <input type="hidden" id="id_struktur" name="id_struktur">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="nim">NIM</label>
+                    <select class="form-control" id="nim" name="nim" required>
+                        <option value="">Pilih Mahasiswa</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="id_jabatan">Jabatan</label>
+                    <select class="form-control" id="id_jabatan" name="id_jabatan" required>
+                        <option value="">Pilih Jabatan</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="id_periode">Periode</label>
+                    <select class="form-control" id="id_periode" name="id_periode" required>
+                        <option value="">Pilih Periode</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="foto">Foto</label>
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="foto" name="foto" accept="image/*">
+                        <label class="custom-file-label" for="foto">Pilih file</label>
+                    </div>
+                    <small class="form-text text-muted">Format: JPG, PNG. Maksimal 2MB</small>
+                    <div id="preview-foto" class="mt-2"></div>
+                </div>
             </div>
-            <div class="form-group">
-              <label for="id_jabatan">Jabatan</label>
-              <select class="form-control" id="id_jabatan" name="id_jabatan" required>
-                <option value="">Pilih Jabatan</option>
-                <option value="2">Wakil Ketua</option>
-                <option value="1">Ketua</option>
-                <!-- Tambah opsi jabatan lainnya di sini -->
-              </select>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                <button type="submit" class="btn btn-primary">Simpan</button>
             </div>
-            <div class="form-group">
-              <label for="id_periode">Periode</label>
-              <select class="form-control" id="id_periode" name="id_periode" required>
-                <option value="">Pilih Periode</option>
-                <option value="1">2024-10-01 s.d 2024-10-31</option>
-                <!-- Tambah opsi periode lainnya di sini -->
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="tanggal_mulai">Tanggal Mulai</label>
-              <input type="date" class="form-control" id="tanggal_mulai" name="tanggal_mulai" required>
-            </div>
-            <div class="form-group">
-              <label for="tanggal_berakhir">Tanggal Berakhir</label>
-              <input type="date" class="form-control" id="tanggal_berakhir" name="tanggal_berakhir" required>
-            </div>
-            <div class="form-group">
-              <label for="foto">Foto</label>
-              <div class="custom-file">
-                <input type="file" class="custom-file-input" id="foto" name="foto" accept="image/*">
-                <label class="custom-file-label" for="foto">Pilih file</label>
-              </div>
-              <small class="form-text text-muted">Format: JPG, PNG. Maksimal 2MB</small>
-              <div id="preview-foto" class="mt-2"></div>
-            </div>
-          </div>
-          <div class="modal-footer justify-content-between">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
-            <button type="submit" class="btn btn-primary">Simpan</button>
-          </div>
         </form>
       </div>
     </div>
@@ -147,6 +144,7 @@
 <script src="/frontend/src/pages/admin/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
 <script src="/frontend/src/pages/admin/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
 <script src="/frontend/src/pages/admin/dist/js/adminlte.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
 
 <!-- Import Sidebar Manager -->
 <script type="module">
@@ -161,130 +159,314 @@
 
 <script>
   $(document).ready(function () {
-    bsCustomFileInput.init();
-    loadStruktur(); // Call the function to load data on page load
+  // Ambil id_ukm dari session PHP
+  const id_ukm = <?php echo $_SESSION['id_ukm']; ?>;
+  
+  bsCustomFileInput.init();
+  loadStruktur();
+  loadMahasiswa();
+  loadJabatan();
+  loadPeriode();
 
-    // Function to load organizational structure data
-    function loadStruktur() {
-      $.ajax({
-        url: '/backend/controllers/admin-ukm/struktur_organisasi.php?id_ukm=1', // Ensure UKM ID is correct
-        method: 'GET',
-        dataType: 'json',
-        success: populateTable,
-        error: function(xhr, status, error) {
-          console.error('AJAX Error:', status, error); // Log errors
-        }
-      });
-    }
+  // Function to load mahasiswa for dropdown
+  function loadMahasiswa() {
+    $.ajax({
+      url: `/backend/controllers/admin-ukm/struktur_organisasi.php?action=get_mahasiswa&id_ukm=${id_ukm}`,
+      method: 'GET',
+      dataType: 'json',
+      success: function(data) {
+        const select = $('#nim');
+        select.empty();
+        select.append('<option value="">Pilih Mahasiswa</option>');
+        data.forEach(function(item) {
+          select.append(`<option value="${item.nim}">${item.nim} - ${item.nama_lengkap}</option>`);
+        });
+      },
+      error: function(xhr, status, error) {
+        console.error('AJAX Error:', status, error);
+      }
+    });
+  }
 
-    // Populate table with data
+  // Function khusus untuk load mahasiswa saat edit
+  function loadMahasiswaForEdit(id_struktur, selectedNim) {
+    $.ajax({
+      url: `/backend/controllers/admin-ukm/struktur_organisasi.php?action=get_mahasiswa_edit&id_ukm=${id_ukm}&id_struktur=${id_struktur}`,
+      method: 'GET',
+      dataType: 'json',
+      success: function(data) {
+        const select = $('#nim');
+        select.empty();
+        select.append('<option value="">Pilih Mahasiswa</option>');
+        data.forEach(function(item) {
+          const selected = item.nim === selectedNim ? 'selected' : '';
+          select.append(`<option value="${item.nim}" ${selected}>${item.nim} - ${item.nama_lengkap}</option>`);
+        });
+        select.val(selectedNim);
+      },
+      error: function(xhr, status, error) {
+        console.error('AJAX Error:', status, error);
+      }
+    });
+  }
+
+  // Function to load jabatan for dropdown
+  function loadJabatan() {
+    $.ajax({
+      url: '/backend/controllers/admin-ukm/struktur_organisasi.php?action=get_jabatan',
+      method: 'GET',
+      dataType: 'json',
+      success: function(data) {
+        const select = $('#id_jabatan');
+        select.empty();
+        select.append('<option value="">Pilih Jabatan</option>');
+        data.forEach(function(item) {
+          select.append(`<option value="${item.id_jabatan}">${item.nama_jabatan}</option>`);
+        });
+      },
+      error: function(xhr, status, error) {
+        console.error('AJAX Error:', status, error);
+      }
+    });
+  }
+
+  // Function to load periode for dropdown
+  function loadPeriode() {
+    $.ajax({
+      url: '/backend/controllers/admin-ukm/struktur_organisasi.php?action=get_periode',
+      method: 'GET',
+      dataType: 'json',
+      success: function(data) {
+        const select = $('#id_periode');
+        select.empty();
+        select.append('<option value="">Pilih Periode</option>');
+        data.forEach(function(item) {
+          select.append(`<option value="${item.id_periode}">${item.tahun_mulai} - ${item.tahun_selesai}</option>`);
+        });
+      },
+      error: function(xhr, status, error) {
+        console.error('AJAX Error:', status, error);
+      }
+    });
+  }
+
+  // Function to load organizational structure data
+  function loadStruktur() {
+    $.ajax({
+      url: `/backend/controllers/admin-ukm/struktur_organisasi.php?id_ukm=${id_ukm}`,
+      method: 'GET',
+      dataType: 'json',
+      success: populateTable,
+      error: function(xhr, status, error) {
+        console.error('AJAX Error:', status, error);
+      }
+    });
+  }
+
+  // Populate table with data
     function populateTable(data) {
       const tbody = $('#table-struktur tbody');
-      tbody.empty(); // Clear previous table data
+      tbody.empty();
       $.each(data, function(index, item) {
         const row = `
           <tr>
             <td>${index + 1}</td>
-            <td><img src='/frontend/public/assets/${item.foto_path || 'default.png'}' width='50' alt='Foto'></td>
+            <td><img src='/frontend/public/assets/${item.foto_path || 'default.png'}' width='50' height='50' class="img-circle" alt='Foto'></td>
             <td>${item.nim || 'N/A'}</td>
             <td>${item.nama || 'N/A'}</td>
             <td>${item.jabatan || 'N/A'}</td>
-            <td>${item.tanggal_mulai} s.d ${item.tanggal_berakhir}</td>
+            <td>${item.periode || 'N/A'}</td>
             <td>
-              <button class="btn btn-primary btn-sm edit-btn" data-id="${item.id_struktur}">Edit</button>
-              <button class="btn btn-danger btn-sm delete-btn" data-id="${item.id_struktur}">Delete</button>
+              <button class="btn btn-primary btn-sm edit-btn" data-id="${item.id_struktur}">
+                <i class="fas fa-edit"></i> Edit
+              </button>
+              <button class="btn btn-danger btn-sm delete-btn" data-id="${item.id_struktur}">
+                <i class="fas fa-trash"></i> Delete
+              </button>
             </td>
           </tr>
         `;
         tbody.append(row);
       });
-    }
+  }
 
-    // Reset modal for adding new data
-    $('#add-btn').on('click', function () {
+  // Reset modal for adding new data
+  $('#add-btn').on('click', function () {
       resetForm();
       $('#modal-title').text('Tambah Pengurus');
-    });
+      loadMahasiswa();
+  });
 
-    // Edit button click event
-    $(document).on('click', '.edit-btn', function () {
-      const id = $(this).data('id'); // Get the ID of the item to edit
-      $.ajax({
-        url: '/backend/controllers/admin-ukm/struktur_organisasi.php?id_struktur=' + id,
-        method: 'GET',
-        dataType: 'json',
-        success: function (data) {
-          $('#id_struktur').val(data.id_struktur);
-          $('#nim').val(data.nim);
-          $('#id_jabatan').val(data.id_jabatan);
-          $('#id_periode').val(data.id_periode);
-          $('#tanggal_mulai').val(data.tanggal_mulai);
-          $('#tanggal_berakhir').val(data.tanggal_berakhir);
-          $('#modal-title').text('Edit Pengurus');
-          $('#modal-form').modal('show');
-        },
-        error: function (xhr, status, error) {
-          console.error('AJAX Error:', status, error); // Log errors
-        }
-      });
-    });
-
-    // Form submission for add/edit
-    $('#form-struktur').on('submit', function (event) {
-      event.preventDefault(); // Prevent form submission
-      const formData = new FormData(this); // Create a FormData object
-      $.ajax({
-        url: '/backend/controllers/admin-ukm/struktur_organisasi.php',
-        method: 'POST',
-        data: formData,
-        contentType: false, // Prevent jQuery from overriding content type
-        processData: false, // Don't process data as a query string
-        success: function (response) {
-          $('#modal-form').modal('hide'); // Close modal
-          loadStruktur(); // Reload the table data
-        },
-        error: function (xhr, status, error) {
-          console.error('AJAX Error:', status, error); // Log errors
-        }
-      });
-    });
-
-    // Delete button click event
-    $(document).on('click', '.delete-btn', function () {
+  // Edit button click event
+  $(document).on('click', '.edit-btn', function () {
       const id = $(this).data('id');
-      if (confirm('Are you sure you want to delete this item?')) {
-        $.ajax({
+      $.ajax({
           url: '/backend/controllers/admin-ukm/struktur_organisasi.php?id_struktur=' + id,
-          method: 'DELETE',
-          success: function () {
-            loadStruktur(); // Reload the table data
+          method: 'GET',
+          dataType: 'json',
+          success: function (data) {
+              console.log('Data edit:', data); // Debug
+              $('#id_struktur').val(data.id_struktur);
+              
+              // Load mahasiswa dan set selected value
+              const select = $('#nim');
+              select.empty();
+              select.append('<option value="">Pilih Mahasiswa</option>');
+              
+              // Tambahkan opsi untuk mahasiswa yang sedang diedit
+              select.append(`<option value="${data.nim}" selected>${data.nim} - ${data.nama_lengkap}</option>`);
+              
+              $('#id_jabatan').val(data.id_jabatan);
+              $('#id_periode').val(data.id_periode);
+              if (data.foto_path) {
+                  $('#preview-foto').html(`<img src="/frontend/public/assets/${data.foto_path}" width="100" alt="Preview Foto">`);
+              }
+              $('#modal-title').text('Edit Pengurus');
+              $('#modal-form').modal('show');
           },
           error: function (xhr, status, error) {
-            console.error('AJAX Error:', status, error); // Log errors
+              console.error('AJAX Error:', status, error);
+              alert('Gagal mengambil data pengurus');
           }
-        });
-      }
-    });
-
-    // Function to reset the modal form
-    function resetForm() {
-      $('#form-struktur')[0].reset(); // Reset the form
-      $('#id_struktur').val(''); // Clear the ID input
-      $('#preview-foto').empty(); // Clear the image preview
-    }
-
-    // Preview selected image
-    $('#foto').on('change', function () {
-      const file = this.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          $('#preview-foto').html(`<img src="${e.target.result}" width="100" alt="Preview Foto">`);
-        }
-        reader.readAsDataURL(file);
-      }
-    });
+      });
   });
+
+  // Form submission untuk add/edit
+  $('#form-struktur').on('submit', function (event) {
+      event.preventDefault();
+      const formData = new FormData(this);
+      formData.append('id_ukm', id_ukm);
+
+      $.ajax({
+          url: '/backend/controllers/admin-ukm/struktur_organisasi.php',
+          method: 'POST',
+          data: formData,
+          contentType: false,
+          processData: false,
+          success: function (response) {
+              if (response.status === 'success') {
+                  Swal.fire({
+                      icon: 'success',
+                      title: 'Berhasil!',
+                      text: formData.get('id_struktur') ? 'Data pengurus berhasil diperbarui' : 'Pengurus baru berhasil ditambahkan',
+                      showConfirmButton: false,
+                      timer: 1500
+                  }).then(() => {
+                      $('#modal-form').modal('hide');
+                      loadStruktur();
+                  });
+              } else {
+                  Swal.fire({
+                      icon: 'error',
+                      title: 'Gagal!',
+                      text: response.message || 'Terjadi kesalahan saat menyimpan data'
+                  });
+              }
+          },
+          error: function (xhr, status, error) {
+              console.error('AJAX Error:', status, error);
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Error!',
+                  text: 'Terjadi kesalahan saat menghubungi server'
+              });
+          }
+      });
+  });
+
+  // Delete button click event
+  $(document).on('click', '.delete-btn', function () {
+      const id = $(this).data('id');
+      
+      Swal.fire({
+          title: 'Apakah Anda yakin?',
+          text: "Data pengurus akan dihapus permanen!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Ya, hapus!',
+          cancelButtonText: 'Batal'
+      }).then((result) => {
+          if (result.isConfirmed) {
+              $.ajax({
+                  url: '/backend/controllers/admin-ukm/struktur_organisasi.php?id_struktur=' + id,
+                  method: 'DELETE',
+                  success: function (response) {
+                      if (response.status === 'success') {
+                          Swal.fire({
+                              icon: 'success',
+                              title: 'Terhapus!',
+                              text: 'Data pengurus berhasil dihapus',
+                              showConfirmButton: false,
+                              timer: 1500
+                          }).then(() => {
+                              loadStruktur();
+                          });
+                      } else {
+                          Swal.fire({
+                              icon: 'error',
+                              title: 'Gagal!',
+                              text: response.message || 'Gagal menghapus data pengurus'
+                          });
+                      }
+                  },
+                  error: function (xhr, status, error) {
+                      console.error('AJAX Error:', status, error);
+                      Swal.fire({
+                          icon: 'error',
+                          title: 'Error!',
+                          text: 'Terjadi kesalahan saat menghubungi server'
+                      });
+                  }
+              });
+          }
+      });
+  });
+
+  // Function to reset the modal form
+  function resetForm() {
+    $('#form-struktur')[0].reset();
+    $('#id_struktur').val('');
+    $('#preview-foto').empty();
+  }
+
+  // Function untuk konfirmasi sukses
+  function showSuccessMessage(message) {
+      Swal.fire({
+          icon: 'success',
+          title: 'Berhasil!',
+          text: message,
+          showConfirmButton: false,
+          timer: 1500
+      });
+  }
+
+  // Function untuk konfirmasi error
+  function showErrorMessage(message) {
+      Swal.fire({
+          icon: 'error',
+          title: 'Gagal!',
+          text: message
+      });
+  }
+  // Preview selected image
+  $('#foto').on('change', function () {
+    const file = this.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        $('#preview-foto').html(`<img src="${e.target.result}" width="100" alt="Preview Foto">`);
+      }
+      reader.readAsDataURL(file);
+    }
+  });
+});
+
+// Global logout function for sidebar
+window.logout = function() {
+    SidebarManager.logout();
+};
 </script>
 </body>
 </html>
