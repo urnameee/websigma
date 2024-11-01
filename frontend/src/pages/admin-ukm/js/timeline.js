@@ -1,187 +1,232 @@
-// Load Data untuk Dropdowns
-async function loadDropdowns() {
-    try {
-        const response = await fetch('backend/controllers/admin-ukm/keanggotaan.php?action=dropdowns');
-        const data = await response.json();
+$(document).ready(function () {
+    // Ambil id_ukm dari session PHP
+    const id_ukm = document.querySelector('meta[name="id_ukm"]').content;
+    
+    bsCustomFileInput.init();
+    loadTimeline();
 
-        // Populate periode dropdowns (filter dan form)
-        const periodeHtml = data.periode.map(p => 
-            `<option value="${p.id_periode}">${p.tahun_mulai}/${p.tahun_selesai}</option>`
-        ).join('');
-        $('#filter-periode, #id_periode').append(periodeHtml);
-
-        // Populate prodi filter
-        const prodiHtml = data.prodi.map(p => 
-            `<option value="${p.id_program_studi}">${p.nama_program_studi}</option>`
-        ).join('');
-        $('#filter-prodi').append(prodiHtml);
-
-        // Populate mahasiswa dropdown
-        const mahasiswaHtml = data.mahasiswa.map(m => 
-            `<option value="${m.nim}">${m.nim} - ${m.nama_lengkap}</option>`
-        ).join('');
-        $('#nim').append(mahasiswaHtml);
-    } catch (error) {
-        Swal.fire('Error', 'Gagal memuat data dropdown', 'error');
-    }
-}
-
-// Initialize DataTable
-const table = $('#table-anggota').DataTable({
-    processing: true,
-    serverSide: false,
-    ajax: {
-        url: 'backend/controllers/admin-ukm/keanggotaan.php',
-        data: function(d) {
-            return {
-                ...d,
-                periode: $('#filter-periode').val(),
-                status: $('#filter-status').val()
-            };
-        }
-    },
-    columns: [
-        { 
-            data: null,
-            render: (data, type, row, meta) => meta.row + 1
-        },
-        { data: 'nim' },
-        { data: 'nama_lengkap' },
-        { data: 'nama_program_studi' },
-        { 
-            data: 'status',
-            render: data => data.charAt(0).toUpperCase() + data.slice(1)
-        },
-        { 
-            data: 'tanggal_bergabung',
-            render: function(data) {
-                if (!data) return '-';
-                return new Date(data).toLocaleDateString('id-ID', {
-                    day: '2-digit',
-                    month: 'long',
-                    year: 'numeric'
-                });
+    // Function to load timeline data
+    function loadTimeline() {
+        $.ajax({
+            url: `/backend/controllers/admin-ukm/timeline.php?id_ukm=${id_ukm}`,
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                console.log('Data timeline:', data);
+                populateTable(data);
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX Error:', status, error);
             }
-        },
-        { data: 'periode' },
-        {
-            data: null,
-            orderable: false,
-            render: function(data) {
-                return `
-                    <button class="btn btn-sm btn-warning edit-btn" data-id="${data.id_keanggotaan}">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="btn btn-sm btn-danger delete-btn" data-id="${data.id_keanggotaan}">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                `;
-            }
-        }
-    ],
-    order: [[2, 'asc']], // Sort by nama_lengkap
-    responsive: true,
-    autoWidth: false,
-    language: {
-        url: '//cdn.datatables.net/plug-ins/1.10.24/i18n/Indonesian.json'
-    }
-});
-
-// Modifikasi search box default DataTables
-$('.dataTables_filter input').attr('placeholder', 'Cari NIM/Nama...');
-
-// Event Handlers untuk Filter
-$('#filter-periode, #filter-status, #filter-prodi').on('change', () => table.ajax.reload());
-
-// Handle form submit untuk Create/Update
-$('#form-anggota').on('submit', async function(e) {
-    e.preventDefault();
-    try {
-        const formData = new FormData(this);
-        const id = $('#id_keanggotaan').val();
-        const url = id ? 
-            `backend/controllers/admin-ukm/keanggotaan.php?action=update&id=${id}` : 
-            'backend/controllers/admin-ukm/keanggotaan.php?action=create';
-        
-        const response = await fetch(url, {
-            method: 'POST',
-            body: formData
         });
-        
-        const result = await response.json();
-        
-        if (!response.ok) throw new Error(result.error || 'Terjadi kesalahan');
-        
-        await Swal.fire('Sukses', 'Data berhasil disimpan', 'success');
-        $('#modal-form').modal('hide');
-        table.ajax.reload();
-    } catch (error) {
-        Swal.fire('Error', error.message, 'error');
     }
-});
 
-// Handle Edit Button
-$('#table-anggota').on('click', '.edit-btn', async function() {
-    try {
-        const id = $(this).data('id');
-        const response = await fetch(`backend/controllers/admin-ukm/keanggotaan.php?action=show&id=${id}`);
-        const data = await response.json();
-        
-        if (!response.ok) throw new Error(data.error || 'Terjadi kesalahan');
-        
-        // Populate form
-        $('#id_keanggotaan').val(data.id_keanggotaan);
-        $('#nim').val(data.nim);
-        $('#status').val(data.status);
-        $('#id_periode').val(data.id_periode);
-        
-        // Update modal title
-        $('.modal-title').text('Edit Anggota');
+    // Populate table with data
+    function populateTable(data) {
+        const tbody = $('#table-timeline tbody');
+        tbody.empty();
+        $.each(data, function(index, item) {
+            const row = `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${item.judul_kegiatan || 'N/A'}</td>
+                    <td>${item.deskripsi || 'N/A'}</td>
+                    <td>${formatDate(item.tanggal_kegiatan)}</td>
+                    <td>${formatTime(item.waktu_mulai)} - ${formatTime(item.waktu_selesai)}</td>
+                    <td>
+                        <span class="badge badge-${item.status === 'active' ? 'success' : 'danger'}">
+                            ${item.status}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-info btn-sm manage-panitia" data-id="${item.id_timeline}">
+                            <i class="fas fa-users"></i> Panitia (${item.jumlah_panitia || 0})
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn-info btn-sm manage-rapat" data-id="${item.id_timeline}">
+                            <i class="fas fa-book"></i> Rapat (${item.jumlah_rapat || 0})
+                        </button>
+                    </td>
+                    <td>
+                        <img src='/frontend/public/assets/${item.image_path || 'default.png'}' 
+                             width='50' height='50' 
+                             class="img-circle" 
+                             alt='Foto'>
+                    </td>
+                    <td>
+                        <button class="btn btn-primary btn-sm edit-btn" data-id="${item.id_timeline}">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="btn btn-danger btn-sm delete-btn" data-id="${item.id_timeline}">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </td>
+                </tr>
+            `;
+            tbody.append(row);
+        });
+    }
+
+    // Helper function untuk format tanggal
+    function formatDate(dateString) {
+        if (!dateString) return 'N/A';
+        const date = new Date(dateString);
+        return new Intl.DateTimeFormat('id-ID', {
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric'
+        }).format(date);
+    }
+
+    // Helper function untuk format waktu
+    function formatTime(timeString) {
+        if (!timeString) return 'N/A';
+        const [hours, minutes] = timeString.split(':');
+        return `${hours}:${minutes}`;
+    }
+
+    // Reset form
+    function resetForm() {
+        $('#form-timeline')[0].reset();
+        $('#id_timeline').val('');
+        $('#preview-image').empty();
+        $('#status').prop('checked', true);
+    }
+
+    // Add button click
+    $('#add-btn').on('click', function() {
+        resetForm();
+        $('#modal-title').text('Tambah Timeline');
         $('#modal-form').modal('show');
-    } catch (error) {
-        Swal.fire('Error', error.message, 'error');
-    }
-});
+    });
 
-// Handle Delete Button
-$('#table-anggota').on('click', '.delete-btn', async function() {
-    try {
-        const result = await Swal.fire({
-            title: 'Konfirmasi',
-            text: 'Yakin ingin menghapus data ini?',
+    // Edit button click
+    $(document).on('click', '.edit-btn', function() {
+        const id = $(this).data('id');
+        $.ajax({
+            url: `/backend/controllers/admin-ukm/timeline.php?id_timeline=${id}`,
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                $('#id_timeline').val(data.id_timeline);
+                $('#judul_kegiatan').val(data.judul_kegiatan);
+                $('#deskripsi').val(data.deskripsi);
+                $('#tanggal_kegiatan').val(data.tanggal_kegiatan);
+                $('#waktu_mulai').val(data.waktu_mulai);
+                $('#waktu_selesai').val(data.waktu_selesai);
+                $('#status').prop('checked', data.status === 'active');
+                
+                if (data.image_path) {
+                    $('#preview-image').html(`
+                        <img src="/frontend/public/assets/${data.image_path}" 
+                             width="200" 
+                             class="img-thumbnail" 
+                             alt="Preview">
+                    `);
+                }
+                
+                $('#modal-title').text('Edit Timeline');
+                $('#modal-form').modal('show');
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX Error:', xhr.responseText);
+                Swal.fire('Error!', 'Gagal mengambil data timeline', 'error');
+            }
+        });
+    });
+
+    // Form submit
+    $('#form-timeline').on('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        formData.append('id_ukm', id_ukm);
+
+        $.ajax({
+            url: '/backend/controllers/admin-ukm/timeline.php',
+            method: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                if (response.status === 'success') {
+                    $('#modal-form').modal('hide');
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: 'Data timeline berhasil disimpan',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => {
+                        loadTimeline();
+                    });
+                } else {
+                    Swal.fire('Error!', response.message, 'error');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX Error:', xhr.responseText);
+                Swal.fire('Error!', 'Gagal menyimpan data timeline', 'error');
+            }
+        });
+    });
+
+    // Delete button click
+    $(document).on('click', '.delete-btn', function() {
+        const id = $(this).data('id');
+        
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Data timeline akan dihapus permanen!",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: 'Ya, Hapus!',
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, hapus!',
             cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `/backend/controllers/admin-ukm/timeline.php?id_timeline=${id}`,
+                    method: 'DELETE',
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Terhapus!',
+                                text: 'Data timeline berhasil dihapus',
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(() => {
+                                loadTimeline();
+                            });
+                        } else {
+                            Swal.fire('Error!', response.message, 'error');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX Error:', xhr.responseText);
+                        Swal.fire('Error!', 'Gagal menghapus data timeline', 'error');
+                    }
+                });
+            }
         });
-        
-        if (result.isConfirmed) {
-            const id = $(this).data('id');
-            const response = await fetch(
-                `backend/controllers/admin-ukm/keanggotaan.php?action=delete&id=${id}`, 
-                { method: 'DELETE' }
-            );
-            
-            const data = await response.json();
-            
-            if (!response.ok) throw new Error(data.error || 'Terjadi kesalahan');
-            
-            await Swal.fire('Sukses', 'Data berhasil dihapus', 'success');
-            table.ajax.reload();
+    });
+
+    // Preview image
+    $('#image').on('change', function() {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                $('#preview-image').html(`
+                    <img src="${e.target.result}" 
+                         width="200" 
+                         class="img-thumbnail" 
+                         alt="Preview">
+                `);
+            }
+            reader.readAsDataURL(file);
         }
-    } catch (error) {
-        Swal.fire('Error', error.message, 'error');
-    }
-});
-
-// Handle Modal Close
-$('#modal-form').on('hidden.bs.modal', function() {
-    $('#form-anggota')[0].reset();
-    $('#id_keanggotaan').val('');
-    $('.modal-title').text('Tambah Anggota');
-});
-
-// Initialize
-$(document).ready(function() {
-    loadDropdowns();
+    });
 });
