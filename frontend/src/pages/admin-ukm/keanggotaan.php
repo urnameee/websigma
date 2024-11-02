@@ -184,5 +184,11 @@ if (!isset($_SESSION['id_ukm'])) {
         const id_ukm = <?php echo $_SESSION['id_ukm']; ?>;
     </script>
     <script src="/frontend/src/pages/admin-ukm/js/keanggotaan.js"></script>
+    <script>
+         // Global logout function for sidebar
+        window.logout = function() {
+            SidebarManager.logout();
+        };
+    </script>
 </body>
 </html>

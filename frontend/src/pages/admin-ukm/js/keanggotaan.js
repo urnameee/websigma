@@ -176,11 +176,6 @@ $(document).ready(function () {
         const formData = new FormData(this);
         formData.append('id_ukm', id_ukm);
 
-        // Debug form data
-        for (var pair of formData.entries()) {
-            console.log(pair[0]+ ': ' + pair[1]); 
-        }
-
         $.ajax({
             url: '/backend/controllers/admin-ukm/keanggotaan.php',
             method: 'POST',
@@ -188,20 +183,56 @@ $(document).ready(function () {
             processData: false,
             contentType: false,
             success: function(response) {
-                console.log('Response:', response); // Debug response
-                if (response.status === 'success') {
-                    showSuccess(response.message);
-                    $('#modal-form').modal('hide');
-                    loadAnggota();
+                // Handle string response
+                let result = response;
+                if (typeof response === 'string') {
+                    try {
+                        result = JSON.parse(response);
+                    } catch (e) {
+                        console.error('Error parsing JSON:', e);
+                    }
+                }
+
+                if (result.status === 'success') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: result.message,
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => {
+                        $('#modal-form').modal('hide');
+                        resetForm();
+                        loadAnggota();
+                    });
                 } else {
-                    showError(response.message);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal!',
+                        text: result.message || 'Terjadi kesalahan'
+                    });
                 }
             },
             error: function(xhr, status, error) {
-                console.error('AJAX Error:', xhr.responseText);
-                console.error('Status:', status);
-                console.error('Error:', error);
-                showError('Gagal menyimpan data');
+                // Log full error response
+                console.error('Full error response:', xhr.responseText);
+                
+                // Try to parse error message if it's in JSON format
+                let errorMessage = 'Gagal menyimpan data';
+                try {
+                    const errorResponse = JSON.parse(xhr.responseText);
+                    if (errorResponse.message) {
+                        errorMessage = errorResponse.message;
+                    }
+                } catch (e) {
+                    console.error('Error parsing error response:', e);
+                }
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: errorMessage
+                });
             }
         });
     });
