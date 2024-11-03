@@ -16,9 +16,21 @@ function jsonResponse($status, $message = '', $data = null) {
     exit;
 }
 
+// Function untuk validasi tanggal
+function validateDate($date) {
+    $d = DateTime::createFromFormat('Y-m-d', $date);
+    return $d && $d->format('Y-m-d') === $date;
+}
+
 // Fungsi untuk upload file notulensi
 function uploadNotulensi($file) {
-    $target_dir = "../../../frontend/public/assets/";
+    $target_dir = "../../../frontend/public/assets/notulensi/";
+    
+    // Buat direktori jika belum ada
+    if (!file_exists($target_dir)) {
+        mkdir($target_dir, 0777, true);
+    }
+    
     $file_extension = strtolower(pathinfo($file["name"], PATHINFO_EXTENSION));
     $new_filename = "notulensi-" . uniqid() . "." . $file_extension;
     $target_file = $target_dir . $new_filename;
@@ -34,14 +46,20 @@ function uploadNotulensi($file) {
     }
 
     if (move_uploaded_file($file["tmp_name"], $target_file)) {
-        return ['status' => true, 'filename' => $new_filename];
+        return ['status' => true, 'filename' => 'notulensi/' . $new_filename];
     }
     return ['status' => false, 'message' => 'Gagal upload file'];
 }
 
 // Fungsi untuk upload foto dokumentasi
 function uploadDokumentasi($file) {
-    $target_dir = "../../../frontend/public/assets/";
+    $target_dir = "../../../frontend/public/assets/dokumentasi/";
+    
+    // Buat direktori jika belum ada
+    if (!file_exists($target_dir)) {
+        mkdir($target_dir, 0777, true);
+    }
+    
     $file_extension = strtolower(pathinfo($file["name"], PATHINFO_EXTENSION));
     $new_filename = "dokumentasi-" . uniqid() . "." . $file_extension;
     $target_file = $target_dir . $new_filename;
@@ -52,23 +70,31 @@ function uploadDokumentasi($file) {
     }
 
     // Cek tipe file
-    if ($file_extension != "jpg" && $file_extension != "jpeg" && $file_extension != "png") {
+    if (!in_array($file_extension, ["jpg", "jpeg", "png"])) {
         return ['status' => false, 'message' => 'File harus berformat JPG, JPEG, atau PNG'];
     }
 
     if (move_uploaded_file($file["tmp_name"], $target_file)) {
-        return ['status' => true, 'filename' => $new_filename];
+        return ['status' => true, 'filename' => 'dokumentasi/' . $new_filename];
     }
     return ['status' => false, 'message' => 'Gagal upload file'];
+}
+
+// Fungsi untuk hapus file
+function deleteFile($filepath) {
+    $full_path = "../../../frontend/public/assets/" . $filepath;
+    if (file_exists($full_path)) {
+        unlink($full_path);
+    }
 }
 
 // Handle GET request
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
+        // Get rapat by id_timeline
         if (isset($_GET['id_timeline'])) {
             $id_timeline = $_GET['id_timeline'];
             
-            // Get rapat dan dokumentasinya
             $query = "SELECT r.*, 
                      (SELECT COUNT(*) FROM dokumentasi_rapat WHERE id_rapat = r.id_rapat) as jumlah_foto
                      FROM rapat r 
@@ -90,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             jsonResponse('success', 'Data rapat berhasil diambil', $rapat);
         }
 
-        // Get detail rapat untuk edit
+        // Get detail rapat by id_rapat
         if (isset($_GET['id_rapat'])) {
             $id_rapat = $_GET['id_rapat'];
             
@@ -127,6 +153,18 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $pdo->beginTransaction();
 
+        // Validasi input
+        $required_fields = ['id_timeline_rapat', 'judul_rapat', 'tanggal_rapat'];
+        foreach ($required_fields as $field) {
+            if (!isset($_POST[$field]) || empty($_POST[$field])) {
+                throw new Exception("Field $field harus diisi");
+            }
+        }
+
+        if (!validateDate($_POST['tanggal_rapat'])) {
+            throw new Exception('Format tanggal tidak valid');
+        }
+
         $id_rapat = isset($_POST['id_rapat']) ? $_POST['id_rapat'] : null;
         $id_timeline = $_POST['id_timeline_rapat'];
         $judul = $_POST['judul_rapat'];
@@ -155,10 +193,7 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 // Delete old file if exists
                 if ($old_data['notulensi_path']) {
-                    $old_file = "../../../frontend/public/assets/" . $old_data['notulensi_path'];
-                    if (file_exists($old_file)) {
-                        unlink($old_file);
-                    }
+                    deleteFile($old_data['notulensi_path']);
                 }
                 
                 $query .= ", notulensi_path = ?";
@@ -221,7 +256,9 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
         jsonResponse('success', $message);
 
     } catch (Exception $e) {
-        $pdo->rollBack();
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
         jsonResponse('error', $e->getMessage());
     }
 }
@@ -230,6 +267,10 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
 elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     try {
         $pdo->beginTransaction();
+
+        if (!isset($_GET['id_rapat'])) {
+            throw new Exception('ID Rapat tidak ditemukan');
+        }
 
         $id_rapat = $_GET['id_rapat'];
 
@@ -243,33 +284,30 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
             throw new Exception('Data rapat tidak ditemukan');
         }
 
+        // Get all dokumentasi paths
         $query = "SELECT foto_path FROM dokumentasi_rapat WHERE id_rapat = ?";
         $stmt = $pdo->prepare($query);
         $stmt->execute([$id_rapat]);
         $dokumentasi = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Delete dokumentasi
+        // Delete dokumentasi records
         $query = "DELETE FROM dokumentasi_rapat WHERE id_rapat = ?";
         $stmt = $pdo->prepare($query);
         $stmt->execute([$id_rapat]);
 
-        // Delete rapat
+        // Delete rapat record
         $query = "DELETE FROM rapat WHERE id_rapat = ?";
         $stmt = $pdo->prepare($query);
         $stmt->execute([$id_rapat]);
 
         // Delete physical files
         if ($rapat['notulensi_path']) {
-            $file_path = "../../../frontend/public/assets/" . $rapat['notulensi_path'];
-            if (file_exists($file_path)) {
-                unlink($file_path);
-            }
+            deleteFile($rapat['notulensi_path']);
         }
 
         foreach ($dokumentasi as $dok) {
-            $file_path = "../../../frontend/public/assets/" . $dok['foto_path'];
-            if (file_exists($file_path)) {
-                unlink($file_path);
+            if ($dok['foto_path']) {
+                deleteFile($dok['foto_path']);
             }
         }
 
@@ -277,8 +315,15 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
         jsonResponse('success', 'Rapat berhasil dihapus');
 
     } catch (Exception $e) {
-        $pdo->rollBack();
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
         jsonResponse('error', $e->getMessage());
     }
+}
+
+// Handle invalid request method
+else {
+    jsonResponse('error', 'Invalid request method');
 }
 ?>
