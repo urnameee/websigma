@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Data UKM</title>
+  <title>Manajemen Data UKM</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -12,10 +12,15 @@
   <!-- DataTables -->
   <link rel="stylesheet" href="/frontend/src/pages/admin/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
   <link rel="stylesheet" href="/frontend/src/pages/admin/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+  <link rel="stylesheet" href="/frontend/src/pages/admin/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="/frontend/src/pages/admin/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="/frontend/src/pages/admin/dist/css/adminlte.min.css">
   <!-- daterange picker -->
   <link rel="stylesheet" href="/frontend/src/pages/admin/plugins/daterangepicker/daterangepicker.css">
+  <!-- Toastr -->
+  <link rel="stylesheet" href="/frontend/src/pages/admin/plugins/toastr/toastr.min.css">
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
@@ -23,15 +28,15 @@
   <section class="content-header">
     <div class="container-fluid">
       <div class="row mb-2">
-        <div class="col-sm-6 d-flex align-items-center"> <!-- Added d-flex and align-items-center -->
-            <button class="btn btn-secondary mr-3" onclick="window.location.href='/frontend/src/pages/admin/dashboard.html'">
-              <i class="fas fa-arrow-left"></i> Kembali
-            </button>
-            <h1>Data UKM</h1>
-          </div>
+        <div class="col-sm-6 d-flex align-items-center">
+          <button class="btn btn-secondary mr-3" onclick="goBack()">
+            <i class="fas fa-arrow-left"></i> Kembali
+          </button>
+          <h1>Data UKM</h1>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
   <!-- Main content -->
   <section class="content">
@@ -40,7 +45,7 @@
         <div class="col-12">
           <div class="card">
             <div class="card-header">
-              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-form">
+              <button type="button" class="btn btn-primary" onclick="openAddModal()">
                 <i class="fas fa-plus"></i> Tambah UKM
               </button>
             </div>
@@ -84,81 +89,60 @@
               <input type="hidden" id="id_ukm" name="id_ukm">
               
               <div class="form-group">
-                <label for="nama_ukm">Nama UKM</label>
+                <label for="nama_ukm">Nama UKM <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="nama_ukm" name="nama_ukm" required>
               </div>
 
               <div class="form-group">
-                <label for="deskripsi">Deskripsi</label>
-                <textarea class="form-control" id="deskripsi" name="deskripsi" rows="3"></textarea>
+                <label for="deskripsi">Deskripsi <span class="text-danger">*</span></label>
+                <textarea class="form-control" id="deskripsi" name="deskripsi" rows="3" required></textarea>
               </div>
 
               <div class="form-group">
-                <label for="visi">Visi</label>
-                <textarea class="form-control" id="visi" name="visi" rows="3"></textarea>
+                <label for="visi">Visi <span class="text-danger">*</span></label>
+                <textarea class="form-control" id="visi" name="visi" rows="3" required></textarea>
               </div>
 
               <div class="form-group">
-                <label for="misi">Misi</label>
-                <textarea class="form-control" id="misi" name="misi" rows="3"></textarea>
+                <label for="misi">Misi <span class="text-danger">*</span></label>
+                <textarea class="form-control" id="misi" name="misi" rows="3" required></textarea>
               </div>
 
               <div class="form-group">
-                <label for="tanggal_berdiri">Tanggal Berdiri</label>
-                <input type="text" class="form-control datepicker" id="tanggal_berdiri" name="tanggal_berdiri">
+                <label for="tanggal_berdiri">Tanggal Berdiri <span class="text-danger">*</span></label>
+                <input type="text" class="form-control datepicker" id="tanggal_berdiri" name="tanggal_berdiri" required>
               </div>
 
               <div class="form-group">
-                <label for="logo">Logo UKM</label>
+                <label for="logo">Logo UKM <span class="text-danger">*</span></label>
                 <div class="input-group">
                   <div class="custom-file">
                     <input type="file" class="custom-file-input" id="logo" name="logo" accept=".png">
-                    <label class="custom-file-label" for="logo">Choose file</label>
+                    <label class="custom-file-label" for="logo">Pilih file</label>
                   </div>
                 </div>
                 <small class="text-muted">Format: PNG, Maksimal 5MB</small>
                 <div id="preview-logo" class="mt-2"></div>
-
-                <div class="form-group">
-                  <label for="cover">Cover UKM</label>
-                  <div class="input-group">
-                    <div class="custom-file">
-                      <input type="file" class="custom-file-input" id="cover" name="cover" accept=".jpg,.jpeg,.png">
-                      <label class="custom-file-label" for="cover">Choose file</label>
-                    </div>
-                  </div>
-                  <small class="text-muted">Format: JPG/PNG, Maksimal 5MB</small>
-                  <div id="preview-cover" class="mt-2"></div>
-                </div>
               </div>
+
+              <div class="form-group">
+                <label for="cover">Cover UKM <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="cover" name="cover" accept=".jpg,.jpeg,.png">
+                    <label class="custom-file-label" for="cover">Pilih file</label>
+                  </div>
+                </div>
+                <small class="text-muted">Format: JPG/PNG, Maksimal 5MB</small>
+                <div id="preview-cover" class="mt-2"></div>
+              </div>
+            </div>
 
             <div class="modal-footer justify-content-between">
               <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
               <button type="submit" class="btn btn-primary">Simpan</button>
             </div>
           </form>
-        </div>
-      </div>
-    </div>
-
-    <!-- Modal Delete Confirmation-->
-    <div class="modal fade" id="modal-delete">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title">Konfirmasi Hapus</h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <p>Apakah Anda yakin ingin menghapus data ini?</p>
-            <input type="hidden" id="delete-id">
-          </div>
-          <div class="modal-footer justify-content-between">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
-            <button type="button" class="btn btn-danger" id="btn-confirm-delete">Hapus</button>
-          </div>
         </div>
       </div>
     </div>
@@ -170,7 +154,7 @@
 <script src="/frontend/src/pages/admin/plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
 <script src="/frontend/src/pages/admin/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- DataTables -->
+<!-- DataTables & Plugins -->
 <script src="/frontend/src/pages/admin/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="/frontend/src/pages/admin/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
 <script src="/frontend/src/pages/admin/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
@@ -181,184 +165,334 @@
 <script src="/frontend/src/pages/admin/plugins/inputmask/jquery.inputmask.min.js"></script>
 <!-- date-range-picker -->
 <script src="/frontend/src/pages/admin/plugins/daterangepicker/daterangepicker.js"></script>
+<!-- SweetAlert2 -->
+<script src="/frontend/src/pages/admin/plugins/sweetalert2/sweetalert2.min.js"></script>
+<!-- Toastr -->
+<script src="/frontend/src/pages/admin/plugins/toastr/toastr.min.js"></script>
 <!-- AdminLTE App -->
 <script src="/frontend/src/pages/admin/dist/js/adminlte.min.js"></script>
 
 <!-- Page specific script -->
 <script>
-  $(function() {
-      // Initialize DataTable
-      var table = $('#tabel-ukm').DataTable({
-          "responsive": true,
-          "autoWidth": false,
-          "ajax": {
-              "url": "/backend/controllers/admin/ukm.php?action=get_all",
-              "type": "GET"
-          },
-          "columns": [
-              { 
-                  "data": "logo_path",
-                  "render": function(data, type, row) {
-                      return data ? `<img src="/frontend/public/assets/${data}" height="50">` : '';
-                  }
-              },
-              { 
-                  "data": "banner_path",
-                  "render": function(data, type, row) {
-                      return data ? `<img src="/frontend/public/assets/${data}" height="50">` : '';
-                  }
-              },
-              { "data": "nama_ukm" },
-              { "data": "deskripsi" },
-              { "data": "visi" },
-              { "data": "misi" },
-              { 
-                  "data": "tanggal_berdiri",
-                  "render": function(data) {
-                      return moment(data).format('DD/MM/YYYY');
-                  }
-              },
-              {
-                  "data": null,
-                  "render": function(data, type, row) {
-                      return `
-                          <button class="btn btn-sm btn-info btn-edit" data-id="${row.id_ukm}">
-                              <i class="fas fa-edit"></i>
-                          </button>
-                          <button class="btn btn-sm btn-danger btn-delete" data-id="${row.id_ukm}">
-                              <i class="fas fa-trash"></i>
-                          </button>
-                      `;
-                  }
-              }
-          ]
-      });
-  
-      // Initialize bs-custom-file-input
-      bsCustomFileInput.init();
-  
-      // Initialize Datepicker
-      $('#tanggal_berdiri').daterangepicker({
-          singleDatePicker: true,
-          locale: {
-              format: 'DD/MM/YYYY'
-          }
-      });
-  
-      // Preview Logo
-      $('#logo').change(function() {
-          const file = this.files[0];
-          if (file) {
-              let reader = new FileReader();
-              reader.onload = function(event) {
-                  $('#preview-logo').html(`<img src="${event.target.result}" class="img-fluid" style="max-height: 200px">`);
-              }
-              reader.readAsDataURL(file);
-          }
-      });
-  
-      // Preview Cover
-      $('#cover').change(function() {
-          const file = this.files[0];
-          if (file) {
-              let reader = new FileReader();
-              reader.onload = function(event) {
-                  $('#preview-cover').html(`<img src="${event.target.result}" class="img-fluid" style="max-height: 200px">`);
-              }
-              reader.readAsDataURL(file);
-          }
-      });
-  
-      // Handle form submit
-      $('#form-ukm').on('submit', function(e) {
-          e.preventDefault();
-          const formData = new FormData(this);
-          const mode = $('#form-mode').val();
-          
-          $.ajax({
-              url: `/backend/controllers/admin/ukm.php?action=${mode}`,
-              type: 'POST',
-              data: formData,
-              processData: false,
-              contentType: false,
-              success: function(response) {
-                  if(response.status === 'success') {
-                      $('#modal-form').modal('hide');
-                      table.ajax.reload();
-                      alert('Data berhasil disimpan!');
-                  } else {
-                      alert('Gagal menyimpan data: ' + response.message);
-                  }
-              },
-              error: function() {
-                  alert('Terjadi kesalahan sistem');
-              }
-          });
-      });
-  
-      // Handle edit button
-      $('#tabel-ukm').on('click', '.btn-edit', function() {
-          const id = $(this).data('id');
-          $('#form-mode').val('edit');
-          
-          $.get(`/backend/controllers/admin/ukm.php?action=get_one&id=${id}`, function(data) {
-              $('#id_ukm').val(data.id_ukm);
-              $('#nama_ukm').val(data.nama_ukm);
-              $('#deskripsi').val(data.deskripsi);
-              $('#visi').val(data.visi);
-              $('#misi').val(data.misi);
-              $('#tanggal_berdiri').val(moment(data.tanggal_berdiri).format('DD/MM/YYYY'));
-              
-              if(data.logo_path) {
-                  $('#preview-logo').html(`<img src="/frontend/public/assets/${data.logo_path}" class="img-fluid" style="max-height: 200px">`);
-              }
-              
-              if(data.banner_path) {
-                  $('#preview-cover').html(`<img src="/frontend/public/assets/${data.banner_path}" class="img-fluid" style="max-height: 200px">`);
-              }
-              
-              $('#modal-form').modal('show');
-          });
-      });
-  
-      // Handle delete button
-      $('#tabel-ukm').on('click', '.btn-delete', function() {
-          const id = $(this).data('id');
-          $('#delete-id').val(id);
-          $('#modal-delete').modal('show');
-      });
-  
-      // Handle delete confirmation
-      $('#btn-confirm-delete').on('click', function() {
-          const id = $('#delete-id').val();
-          
-          $.ajax({
-              url: '/backend/controllers/admin/ukm.php?action=delete',
-              type: 'POST',
-              data: { id_ukm: id },
-              success: function(response) {
-                  if(response.status === 'success') {
-                      $('#modal-delete').modal('hide');
-                      table.ajax.reload();
-                      alert('Data berhasil dihapus!');
-                  } else {
-                      alert('Gagal menghapus data: ' + response.message);
-                  }
-              },
-              error: function() {
-                  alert('Terjadi kesalahan sistem');
-              }
-          });
-      });
-  
-      // Reset form when modal is hidden
-      $('#modal-form').on('hidden.bs.modal', function () {
-          $('#form-ukm')[0].reset();
-          $('#preview-logo').html('');
-          $('#preview-cover').html('');
-          $('#form-mode').val('add');
-      });
-  });
-  </script>
+$(function() {
+    // Initialize components
+    bsCustomFileInput.init();
+    
+    // Configure toastr
+    toastr.options = {
+        "closeButton": true,
+        "progressBar": true,
+        "timeOut": "3000"
+    };
+
+    // Initialize DataTable with improved configuration
+    var table = $('#tabel-ukm').DataTable({
+        "responsive": true,
+        "autoWidth": false,
+        "processing": true,
+        "serverSide": false,
+        "ajax": {
+            "url": "/backend/controllers/admin/ukm.php?action=get_all",
+            "type": "GET",
+            "dataSrc": "data",
+            "error": function(xhr, error, thrown) {
+                toastr.error('Gagal memuat data: ' + thrown);
+            }
+        },
+        "columns": [
+            { 
+                "data": "logo_path",
+                "render": function(data, type, row) {
+                    return data ? `<img src="/frontend/public/assets/${data}" height="50" alt="Logo ${row.nama_ukm}">` : 'Tidak ada logo';
+                }
+            },
+            { 
+                "data": "banner_path",
+                "render": function(data, type, row) {
+                    return data ? `<img src="/frontend/public/assets/${data}" height="50" alt="Cover ${row.nama_ukm}">` : 'Tidak ada cover';
+                }
+            },
+            { "data": "nama_ukm" },
+            { 
+                "data": "deskripsi",
+                "render": function(data) {
+                    return data ? (data.length > 50 ? data.substring(0, 47) + '...' : data) : '';
+                }
+            },
+            { 
+                "data": "visi",
+                "render": function(data) {
+                    return data ? (data.length > 50 ? data.substring(0, 47) + '...' : data) : '';
+                }
+            },
+            { 
+                "data": "misi",
+                "render": function(data) {
+                    return data ? (data.length > 50 ? data.substring(0, 47) + '...' : data) : '';
+                }
+            },
+            { 
+                "data": "tanggal_berdiri",
+                "render": function(data) {
+                    return data ? moment(data).format('DD/MM/YYYY') : '';
+                }
+            },
+            {
+                "data": null,
+                "render": function(data, type, row) {
+                    return `
+                        <button class="btn btn-sm btn-info btn-edit" onclick="editUkm(${row.id_ukm})" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteUkm(${row.id_ukm})" title="Hapus">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    `;
+                }
+            }
+        ],
+        "language": {
+            "url": "/frontend/src/pages/admin/plugins/datatables/Indonesian.json"
+        }
+    });
+
+    // Initialize Datepicker
+    $('#tanggal_berdiri').daterangepicker({
+        singleDatePicker: true,
+        showDropdowns: true,
+        locale: {
+            format: 'DD/MM/YYYY'
+        }
+    });
+
+    // Handle form submission
+    $('#form-ukm').on('submit', function(e) {
+        e.preventDefault();
+        
+        // Validate form
+        if (!this.checkValidity()) {
+            e.stopPropagation();
+            $(this).addClass('was-validated');
+            return;
+        }
+
+        const formData = new FormData(this);
+        const mode = $('#form-mode').val();
+        
+        Swal.fire({
+            title: 'Loading...',
+            text: 'Mohon tunggu sebentar',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+                $.ajax({
+                    url: `/backend/controllers/admin/ukm.php?action=${mode}`,
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        Swal.close();
+                        if(response.status === 'success') {
+                            $('#modal-form').modal('hide');
+                            table.ajax.reload();
+                            toastr.success('Data berhasil ' + (mode === 'add' ? 'ditambahkan' : 'diupdate'));
+                        } else {
+                            toastr.error(response.message || 'Terjadi kesalahan');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        Swal.close();
+                        toastr.error('Terjadi kesalahan sistem');
+                        console.error('Error:', error);
+                    }
+                });
+            }
+        });
+    });
+
+    // Reset form when modal is hidden
+    $('#modal-form').on('hidden.bs.modal', function () {
+        $('#form-ukm')[0].reset();
+        $('#form-ukm').removeClass('was-validated');
+        $('#preview-logo').html('');
+        $('#preview-cover').html('');
+        $('#form-mode').val('add');
+    });
+
+    // Preview logo
+    $('#logo').change(function() {
+        previewFile(this, '#preview-logo');
+    });
+
+    // Preview cover
+    $('#cover').change(function() {
+        previewFile(this, '#preview-cover');
+    });
+});
+
+// Function to preview uploaded file
+function previewFile(input, previewElement) {
+    const file = input.files[0];
+    if (file) {
+        if (file.size > 5 * 1024 * 1024) {
+            toastr.error('Ukuran file terlalu besar (maksimal 5MB)');
+            input.value = '';
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          $(previewElement).html(`<img src="${e.target.result}" class="img-fluid" style="max-height: 200px">`);
+        }
+        reader.readAsDataURL(file);
+    }
+}
+
+// Function to open add modal
+function openAddModal() {
+    $('#form-mode').val('add');
+    $('#form-ukm')[0].reset();
+    $('.modal-title').text('Tambah UKM');
+    $('#modal-form').modal('show');
+}
+
+// Function to edit UKM
+function editUkm(id) {
+    $('#form-mode').val('edit');
+    $('.modal-title').text('Edit UKM');
+    
+    // Show loading state
+    Swal.fire({
+        title: 'Loading...',
+        text: 'Mengambil data UKM',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+            $.ajax({
+                url: `/backend/controllers/admin/ukm.php?action=get_one&id=${id}`,
+                type: 'GET',
+                success: function(data) {
+                    Swal.close();
+                    if(data) {
+                        $('#id_ukm').val(data.id_ukm);
+                        $('#nama_ukm').val(data.nama_ukm);
+                        $('#deskripsi').val(data.deskripsi);
+                        $('#visi').val(data.visi);
+                        $('#misi').val(data.misi);
+                        $('#tanggal_berdiri').val(moment(data.tanggal_berdiri).format('DD/MM/YYYY'));
+                        
+                        // Preview existing images
+                        if(data.logo_path) {
+                            $('#preview-logo').html(
+                                `<img src="/frontend/public/assets/${data.logo_path}" class="img-fluid" style="max-height: 200px">`
+                            );
+                        }
+                        
+                        if(data.banner_path) {
+                            $('#preview-cover').html(
+                                `<img src="/frontend/public/assets/${data.banner_path}" class="img-fluid" style="max-height: 200px">`
+                            );
+                        }
+                        
+                        $('#modal-form').modal('show');
+                    } else {
+                        toastr.error('Data UKM tidak ditemukan');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    Swal.close();
+                    toastr.error('Gagal mengambil data UKM');
+                    console.error('Error:', error);
+                }
+            });
+        }
+    });
+}
+
+// Function to delete UKM
+function deleteUkm(id) {
+    Swal.fire({
+        title: 'Konfirmasi Hapus',
+        text: "Apakah Anda yakin ingin menghapus data ini?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Ya, Hapus!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Show loading state
+            Swal.fire({
+                title: 'Loading...',
+                text: 'Menghapus data UKM',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                    $.ajax({
+                        url: '/backend/controllers/admin/ukm.php?action=delete',
+                        type: 'POST',
+                        data: { id_ukm: id },
+                        dataType: 'json',
+                        success: function(response) {
+                            Swal.close();
+                            if(response.status === 'success') {
+                                $('#tabel-ukm').DataTable().ajax.reload();
+                                toastr.success('Data berhasil dihapus');
+                            } else {
+                                toastr.error(response.message || 'Gagal menghapus data');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.close();
+                            toastr.error('Terjadi kesalahan sistem');
+                            console.error('Error:', error);
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+
+// Function to go back
+function goBack() {
+    window.location.href = '/frontend/src/pages/admin/dashboard.html';
+}
+
+// Function to handle file input changes
+function handleFileSelect(input, allowedTypes) {
+    const file = input.files[0];
+    if (file) {
+        // Check file size
+        if (file.size > 5 * 1024 * 1024) {
+            toastr.error('Ukuran file terlalu besar (maksimal 5MB)');
+            input.value = '';
+            return false;
+        }
+
+        // Check file type
+        const fileType = file.type.toLowerCase();
+        if (!allowedTypes.includes(fileType)) {
+            toastr.error('Format file tidak sesuai');
+            input.value = '';
+            return false;
+        }
+
+        return true;
+    }
+    return false;
+}
+
+// Add file input listeners
+document.getElementById('logo').addEventListener('change', function() {
+    handleFileSelect(this, ['image/png']);
+});
+
+document.getElementById('cover').addEventListener('change', function() {
+    handleFileSelect(this, ['image/jpeg', 'image/jpg', 'image/png']);
+});
+</script>
 </body>
 </html>

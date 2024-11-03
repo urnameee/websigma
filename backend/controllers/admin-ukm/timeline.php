@@ -31,6 +31,27 @@ function uploadImage($file) {
 // Handle GET request
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
+        // Dalam blok if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        if (isset($_GET['limit']) && isset($_GET['status'])) {
+            try {
+                $limit = (int)$_GET['limit'];
+                $status = $_GET['status'];
+                // LIMIT menggunakan angka langsung, tidak perlu parameter binding
+                $query = "SELECT * FROM timeline_ukm 
+                        WHERE status = ?
+                        ORDER BY tanggal_kegiatan DESC 
+                        LIMIT 4";
+                $stmt = $pdo->prepare($query);
+                $stmt->execute([$status]);
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                echo json_encode(['status' => 'success', 'data' => $result]);
+            } catch (Exception $e) {
+                echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+            }
+            exit;
+        }
+
+
         // Get data timeline berdasarkan UKM
         if (isset($_GET['id_ukm'])) {
             $id_ukm = $_GET['id_ukm'];

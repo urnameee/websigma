@@ -81,18 +81,25 @@
                 <input type="text" class="form-control" id="username" name="username" required>
                 <small class="form-text text-muted">Username harus sesuai dengan NIM mahasiswa yang terdaftar</small>
               </div>
-
+    
               <div class="form-group" id="password-group">
                 <label for="password">Password</label>
                 <input type="password" class="form-control" id="password" name="password" required>
               </div>
-
+    
               <div class="form-group">
                 <label for="role">Role</label>
                 <select class="form-control" id="role" name="role" required>
                   <option value="mahasiswa">Mahasiswa</option>
                   <option value="admin_ukm">Admin UKM</option>
-                  <option value="super_admin">Super Admin</option>
+                </select>
+              </div>
+    
+              <!-- Tambahkan dropdown untuk UKM -->
+              <div class="form-group" id="ukm-group" style="display: none;">
+                <label for="id_ukm">Nama UKM</label>
+                <select class="form-control" id="id_ukm" name="id_ukm">
+                  <!-- Options will be loaded dynamically -->
                 </select>
               </div>
             </div>
@@ -144,7 +151,18 @@
 <!-- Page specific script -->
 <script>
 $(function () {
-  // Initialize DataTable
+  function loadUkmOptions() {
+    $.get('/backend/controllers/admin/ukm.php?action=get_all', function(response) {
+      if(response.data) {
+        const options = response.data.map(ukm => 
+          `<option value="${ukm.id_ukm}">${ukm.nama_ukm}</option>`
+        ).join('');
+        $('#id_ukm').html('<option value="">Pilih UKM</option>' + options);
+      }
+    });
+  }
+
+  // Initialize DataTable (hanya sekali)
   var table = $('#tabel-user').DataTable({
     "responsive": true,
     "autoWidth": false,
@@ -171,18 +189,38 @@ $(function () {
           `;
         }
       }
-    ]
+    ],
+    "language": {
+      "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Indonesian.json"
+    }
+  });
+
+  // Load UKM options when page loads
+  loadUkmOptions();
+
+  // Toggle UKM dropdown based on role selection
+  $('#role').on('change', function() {
+    if($(this).val() === 'admin_ukm') {
+      $('#ukm-group').show();
+      $('#id_ukm').prop('required', true);
+      $('#username').siblings('small').text('Masukkan username untuk admin UKM');
+    } else {
+      $('#ukm-group').hide();
+      $('#id_ukm').prop('required', false);
+      $('#username').siblings('small').text('Username harus sesuai dengan NIM mahasiswa yang terdaftar');
+    }
   });
 
   // Handle form submit
   $('#form-user').on('submit', function(e) {
     e.preventDefault();
     const mode = $('#form-mode').val();
+    const formData = $(this).serialize();
     
     $.ajax({
       url: `/backend/controllers/admin/user.php?action=${mode}`,
       type: 'POST',
-      data: $(this).serialize(),
+      data: formData,
       success: function(response) {
         if(response.status === 'success') {
           $('#modal-form').modal('hide');
@@ -199,22 +237,25 @@ $(function () {
   });
 
   // Handle edit button
-  $('#tabel-user').on('click', '.btn-edit', function() {
+  $(document).on('click', '.btn-edit', function() {
     const id = $(this).data('id');
     $('#form-mode').val('edit');
-    $('#password-group').hide(); // Hide password field on edit
+    $('#password-group').hide();
     
     $.get(`/backend/controllers/admin/user.php?action=get_one&id=${id}`, function(data) {
       $('#id_login').val(data.id_login);
       $('#username').val(data.username);
-      $('#role').val(data.role);
+      $('#role').val(data.role).trigger('change');
+      if(data.role === 'admin_ukm') {
+        $('#id_ukm').val(data.id_ukm);
+      }
       
       $('#modal-form').modal('show');
     });
   });
 
   // Handle reset password button
-  $('#tabel-user').on('click', '.btn-reset', function() {
+  $(document).on('click', '.btn-reset', function() {
     if(confirm('Reset password ke default (123)?')) {
       const id = $(this).data('id');
       
@@ -237,7 +278,7 @@ $(function () {
   });
 
   // Handle delete button
-  $('#tabel-user').on('click', '.btn-delete', function() {
+  $(document).on('click', '.btn-delete', function() {
     const id = $(this).data('id');
     $('#delete-id').val(id);
     $('#modal-delete').modal('show');
@@ -270,7 +311,9 @@ $(function () {
   $('#modal-form').on('hidden.bs.modal', function () {
     $('#form-user')[0].reset();
     $('#form-mode').val('add');
-    $('#password-group').show(); // Show password field when adding new user
+    $('#password-group').show();
+    $('#ukm-group').hide();
+    $('#id_ukm').prop('required', false);
   });
 });
 </script>

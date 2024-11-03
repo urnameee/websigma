@@ -237,36 +237,61 @@ function deleteUkm() {
     global $pdo;
     
     try {
+        // Validate input
+        if (!isset($_POST['id_ukm']) || empty($_POST['id_ukm'])) {
+            throw new Exception('ID UKM tidak valid');
+        }
+
+        $pdo->beginTransaction();
+
         // Get file paths
         $query = "SELECT logo_path, banner_path FROM ukm WHERE id_ukm = :id";
         $stmt = $pdo->prepare($query);
         $stmt->execute(['id' => $_POST['id_ukm']]);
+        
+        if ($stmt->rowCount() === 0) {
+            throw new Exception('Data UKM tidak ditemukan');
+        }
+        
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
         
         // Delete logo file if exists
         if($data['logo_path']) {
             $file_path = $_SERVER['DOCUMENT_ROOT'] . '/frontend/public/assets/' . $data['logo_path'];
             if(file_exists($file_path)) {
-                unlink($file_path);
+                if (!unlink($file_path)) {
+                    throw new Exception('Gagal menghapus file logo');
+                }
             }
         }
 
-        // Delete cover file if exists (BARU)
+        // Delete cover file if exists
         if($data['banner_path']) {
             $file_path = $_SERVER['DOCUMENT_ROOT'] . '/frontend/public/assets/' . $data['banner_path'];
             if(file_exists($file_path)) {
-                unlink($file_path);
+                if (!unlink($file_path)) {
+                    throw new Exception('Gagal menghapus file cover');
+                }
             }
         }
 
         // Delete from database
         $query = "DELETE FROM ukm WHERE id_ukm = :id_ukm";
         $stmt = $pdo->prepare($query);
-        $stmt->execute(['id_ukm' => $_POST['id_ukm']]);
+        $success = $stmt->execute(['id_ukm' => $_POST['id_ukm']]);
+        
+        if (!$success) {
+            throw new Exception('Gagal menghapus data dari database');
+        }
 
+        $pdo->commit();
         echo json_encode(['status' => 'success', 'message' => 'Data berhasil dihapus']);
         
-    } catch(PDOException $e) {
+    } catch(Exception $e) {
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
+        error_log("Error deleting UKM: " . $e->getMessage());
         echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
     }
 }
