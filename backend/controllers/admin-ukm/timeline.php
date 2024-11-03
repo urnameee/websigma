@@ -34,8 +34,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         // Get data timeline berdasarkan UKM
         if (isset($_GET['id_ukm'])) {
             $id_ukm = $_GET['id_ukm'];
-            $query = "SELECT t.*, 
-                     (SELECT COUNT(*) FROM panitia_proker WHERE id_timeline = t.id_timeline) as jumlah_panitia
+            $query = "SELECT t.*,
+                     (SELECT COUNT(*) FROM panitia_proker WHERE id_timeline = t.id_timeline) as jumlah_panitia,
+                     (SELECT COUNT(*) FROM rapat WHERE id_timeline = t.id_timeline) as jumlah_rapat
                      FROM timeline_ukm t
                      WHERE t.id_ukm = ?
                      ORDER BY t.tanggal_kegiatan DESC";
@@ -48,18 +49,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         // Get detail timeline untuk edit
         if (isset($_GET['id_timeline'])) {
             $id_timeline = $_GET['id_timeline'];
-            $query = "SELECT * FROM timeline_ukm WHERE id_timeline = ?";
+            $query = "SELECT t.*,
+                     (SELECT COUNT(*) FROM panitia_proker WHERE id_timeline = t.id_timeline) as jumlah_panitia,
+                     (SELECT COUNT(*) FROM rapat WHERE id_timeline = t.id_timeline) as jumlah_rapat
+                     FROM timeline_ukm t 
+                     WHERE id_timeline = ?";
             $stmt = $pdo->prepare($query);
             $stmt->execute([$id_timeline]);
             echo json_encode($stmt->fetch(PDO::FETCH_ASSOC));
             exit;
         }
 
+        // Sisanya tetap sama
         // Get panitia untuk dropdown
         if (isset($_GET['action']) && $_GET['action'] === 'get_panitia') {
             $id_ukm = $_GET['id_ukm'];
-            $query = "SELECT m.nim, m.nama_lengkap 
-                     FROM keanggotaan_ukm k 
+            $query = "SELECT m.nim, m.nama_lengkap
+                     FROM keanggotaan_ukm k
                      JOIN mahasiswa m ON k.nim = m.nim
                      WHERE k.id_ukm = ?";
             $stmt = $pdo->prepare($query);
@@ -82,21 +88,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             try {
                 $id_timeline = $_GET['id_timeline'];
                 error_log("ID Timeline yang dicari: " . $id_timeline); // tambahkan log
-
                 $query = "SELECT p.id_panitia, p.nim, m.nama_lengkap, j.nama_jabatan
                         FROM panitia_proker p
                         JOIN mahasiswa m ON p.nim = m.nim
                         JOIN jabatan_panitia j ON p.id_jabatan_panitia = j.id_jabatan_panitia
                         WHERE p.id_timeline = ?
                         ORDER BY j.level ASC";
-                
+               
                 $stmt = $pdo->prepare($query);
                 $stmt->execute([$id_timeline]);
                 $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                
+               
                 error_log("Query SQL: " . $query); // tambahkan log query
                 error_log("Data panitia dari DB: " . print_r($data, true)); // tambahkan log hasil
-                
+               
                 echo json_encode($data ?: []);
             } catch (PDOException $e) {
                 error_log("Error Database: " . $e->getMessage());
@@ -109,6 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         exit;
     }
 }
+?>
 
 // Handle POST request (Create/Update)
 elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {

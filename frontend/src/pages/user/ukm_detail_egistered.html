@@ -138,7 +138,9 @@
                     if (data.sidebar_programs && data.sidebar_programs.length > 0) {
                         const sidebarPrograms = document.getElementById('sidebar-programs');
                         sidebarPrograms.innerHTML = data.sidebar_programs.map(program => `
-                            <li class="${program.id_timeline === timelineId ? 'active' : ''}">
+                            <li class="${program.id_timeline === timelineId ? 'active' : ''}" 
+                                onclick="navigateToTimeline(${program.id_timeline})"
+                                style="cursor: pointer;">
                                 ${program.judul_kegiatan}
                             </li>
                         `).join('');
@@ -221,6 +223,11 @@
                     },
                 });
             });
+        }
+
+        // Fungsi untuk navigasi ke timeline lain
+        function navigateToTimeline(id) {
+        window.location.href = `?id=${id}`;
         }
     </script>
     
