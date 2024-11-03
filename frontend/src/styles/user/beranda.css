@@ -66,22 +66,48 @@ body {
 }
 
 /* Event Section Styles */
+/* Event Section */
 .event-section {
   background-color: #0B2447;
   color: white;
   padding: 4rem 2rem;
+  width: 100%; 
 }
+
+.event-title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5rem;
+}
+
+.event-title h2 {
+  position: relative;
+  font-size: 3rem;
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  background-color: #1e5282; /* Background warna untuk teks "EVENT" */
+  color: #ffffff;
+  z-index: 1;
+  width: 100%; /* Memastikan background mencakup seluruh lebar layar */
+}
+
+.event-title h2::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -2rem;
+  width: 50px;
+  height: 2px;
+  background: #4A90E2; /* Warna garis */
+  transform: translateY(-50%);
+}
+
 
 .event-container {
   max-width: 1200px;
   margin: 0 auto;
 }
 
-.event-section h2 {
-  font-size: 2.5rem;
-  margin-bottom: 3rem;
-  font-weight: bold;
-}
 
 .event-card {
   display: flex;
@@ -320,6 +346,13 @@ body {
 
 #footer-container {
   margin-top: 50px;
+}
+
+.no-events {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+  font-style: italic;
 }
 
 /* Responsive Styles */

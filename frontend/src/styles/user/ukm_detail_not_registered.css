@@ -424,15 +424,19 @@ body {
 
 /* Registration CTA */
 .registration-cta {
-    max-width: 1200px;
+    max-width: 1000px;
     margin: 40px auto;
     padding: 40px;
-    background-color: #f1efe9;
+    background-color: #fdf9e3;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: space-between;
     margin-top: 100px;
+    margin-bottom: 100px;
+    gap: 20px;
 }
 
 .cta-image {
@@ -456,6 +460,7 @@ body {
     font-size: 32px;
     color: #1a237e;
     margin-bottom: 15px;
+    max-width: 600px;
     font-weight: bold;
 }
 
@@ -463,6 +468,7 @@ body {
     font-size: 16px;
     color: #333333;
     margin-bottom: 25px;
+    max-width: 300px;
     line-height: 1.5;
 }
 

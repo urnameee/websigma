@@ -63,6 +63,7 @@ function getOneUser() {
     }
 }
 
+// Modifikasi fungsi addUser
 function addUser() {
     global $pdo;
     
@@ -76,9 +77,12 @@ function addUser() {
             throw new Exception('Username sudah terdaftar');
         }
 
-        // Jika rolenya mahasiswa, verify NIM dan set nim_reference
         $nim_reference = null;
+        $id_ukm = null;
+
+        // Validate based on role
         if ($_POST['role'] === 'mahasiswa') {
+            // Verify NIM exists
             $verify_query = "SELECT nim FROM mahasiswa WHERE nim = :nim";
             $verify_stmt = $pdo->prepare($verify_query);
             $verify_stmt->execute(['nim' => $_POST['username']]);
@@ -87,18 +91,34 @@ function addUser() {
                 throw new Exception('Username harus sesuai dengan NIM mahasiswa yang terdaftar');
             }
             $nim_reference = $_POST['username'];
+        } 
+        elseif ($_POST['role'] === 'admin_ukm') {
+            // Verify UKM exists
+            if (empty($_POST['id_ukm'])) {
+                throw new Exception('Pilih UKM untuk admin UKM');
+            }
+            
+            $verify_query = "SELECT id_ukm FROM ukm WHERE id_ukm = :id_ukm";
+            $verify_stmt = $pdo->prepare($verify_query);
+            $verify_stmt->execute(['id_ukm' => $_POST['id_ukm']]);
+            
+            if (!$verify_stmt->fetch()) {
+                throw new Exception('UKM tidak ditemukan');
+            }
+            $id_ukm = $_POST['id_ukm'];
         }
 
-        // Insert new user
-        $query = "INSERT INTO user_login (username, password, role, nim_reference) 
-                  VALUES (:username, :password, :role, :nim_reference)";
+        // Insert new user with id_ukm
+        $query = "INSERT INTO user_login (username, password, role, nim_reference, id_ukm) 
+                  VALUES (:username, :password, :role, :nim_reference, :id_ukm)";
         
         $stmt = $pdo->prepare($query);
         $stmt->execute([
             'username' => $_POST['username'],
             'password' => $_POST['password'],
             'role' => $_POST['role'],
-            'nim_reference' => $nim_reference
+            'nim_reference' => $nim_reference,
+            'id_ukm' => $id_ukm
         ]);
 
         echo json_encode(['status' => 'success', 'message' => 'Data berhasil ditambahkan']);
@@ -108,6 +128,7 @@ function addUser() {
     }
 }
 
+// Modifikasi fungsi editUser
 function editUser() {
     global $pdo;
     
@@ -132,8 +153,10 @@ function editUser() {
             }
         }
 
-        // Set nim_reference based on role
         $nim_reference = null;
+        $id_ukm = null;
+
+        // Validate based on role
         if ($_POST['role'] === 'mahasiswa') {
             $verify_query = "SELECT nim FROM mahasiswa WHERE nim = :nim";
             $verify_stmt = $pdo->prepare($verify_query);
@@ -144,12 +167,19 @@ function editUser() {
             }
             $nim_reference = $_POST['username'];
         }
+        elseif ($_POST['role'] === 'admin_ukm') {
+            if (empty($_POST['id_ukm'])) {
+                throw new Exception('Pilih UKM untuk admin UKM');
+            }
+            $id_ukm = $_POST['id_ukm'];
+        }
 
         // Update user
         $query = "UPDATE user_login SET 
                   username = :username,
                   role = :role,
-                  nim_reference = :nim_reference
+                  nim_reference = :nim_reference,
+                  id_ukm = :id_ukm
                   WHERE id_login = :id_login";
         
         $stmt = $pdo->prepare($query);
@@ -157,7 +187,8 @@ function editUser() {
             'id_login' => $_POST['id_login'],
             'username' => $_POST['username'],
             'role' => $_POST['role'],
-            'nim_reference' => $nim_reference
+            'nim_reference' => $nim_reference,
+            'id_ukm' => $id_ukm
         ]);
         
         echo json_encode(['status' => 'success', 'message' => 'Data berhasil diupdate']);
@@ -165,6 +196,7 @@ function editUser() {
         echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
     }
 }
+
 
 function deleteUser() {
     global $pdo;
