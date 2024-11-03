@@ -1,4 +1,3 @@
-// keanggotaan.js
 $(document).ready(function () {
     loadAnggota();
     loadPeriodeDropdown();
@@ -39,7 +38,6 @@ $(document).ready(function () {
                         </span>
                     </td>
                     <td>${item.periode || 'N/A'}</td>
-                    <td>${formatDate(item.tanggal_bergabung)}</td>
                     <td>
                         <button class="btn btn-primary btn-sm edit-btn" data-id="${item.id_keanggotaan}">
                             <i class="fas fa-edit"></i> Edit
@@ -155,7 +153,6 @@ $(document).ready(function () {
                     $('#id_keanggotaan').val(data.id_keanggotaan);
                     $('#status').val(data.status);
                     $('#id_periode').val(data.id_periode);
-                    $('#tanggal_bergabung').val(data.tanggal_bergabung);
  
                     // Set NIM dengan data yang sedang diedit
                     const select = $('#nim');
@@ -183,7 +180,6 @@ $(document).ready(function () {
             processData: false,
             contentType: false,
             success: function(response) {
-                // Handle string response
                 let result = response;
                 if (typeof response === 'string') {
                     try {
@@ -214,10 +210,8 @@ $(document).ready(function () {
                 }
             },
             error: function(xhr, status, error) {
-                // Log full error response
                 console.error('Full error response:', xhr.responseText);
                 
-                // Try to parse error message if it's in JSON format
                 let errorMessage = 'Gagal menyimpan data';
                 try {
                     const errorResponse = JSON.parse(xhr.responseText);
@@ -280,15 +274,4 @@ $(document).ready(function () {
         $('#id_keanggotaan').val('');
         $('#nim').prop('disabled', false);
     }
- 
-    // Helper function untuk format tanggal
-    function formatDate(dateString) {
-        if (!dateString) return 'N/A';
-        const date = new Date(dateString);
-        return new Intl.DateTimeFormat('id-ID', {
-            day: '2-digit',
-            month: 'long',
-            year: 'numeric'
-        }).format(date);
-    }
- });
+});

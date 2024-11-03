@@ -49,17 +49,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     LEFT JOIN (
                         -- Hitung jumlah UKM yang diikuti per mahasiswa
                         SELECT nim, COUNT(DISTINCT id_ukm) as ukm_count 
-                        FROM keanggotaan_ukm 
-                        WHERE tanggal_berakhir IS NULL 
-                            OR tanggal_berakhir > CURRENT_DATE
+                        FROM keanggotaan_ukm k
+                        JOIN periode_kepengurusan p ON k.id_periode = p.id_periode
+                        WHERE p.status = 'aktif'
                         GROUP BY nim
                     ) k ON m.nim = k.nim
-                    WHERE (k.ukm_count IS NULL OR k.ukm_count < 3) -- Mahasiswa yang belum ikut UKM atau ikut kurang dari 3
+                    WHERE (k.ukm_count IS NULL OR k.ukm_count < 3)
                     AND m.nim NOT IN (
                         -- Exclude mahasiswa yang sudah terdaftar di UKM ini
-                        SELECT nim FROM keanggotaan_ukm 
-                        WHERE id_ukm = ? 
-                        AND (tanggal_berakhir IS NULL OR tanggal_berakhir > CURRENT_DATE)
+                        SELECT nim FROM keanggotaan_ukm k
+                        JOIN periode_kepengurusan p ON k.id_periode = p.id_periode
+                        WHERE k.id_ukm = ? AND p.status = 'aktif'
                     )
                     ORDER BY m.nama_lengkap";
                     
@@ -119,7 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                  JOIN periode_kepengurusan p ON k.id_periode = p.id_periode
                  JOIN program_studi ps ON m.id_program_studi = ps.id_program_studi
                  WHERE $whereClause
-                 ORDER BY k.tanggal_bergabung DESC";
+                 ORDER BY p.tahun_mulai DESC, m.nama_lengkap ASC";
 
         $stmt = $pdo->prepare($query);
         $stmt->execute($params);
@@ -137,30 +137,26 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $id_keanggotaan = isset($_POST['id_keanggotaan']) ? $_POST['id_keanggotaan'] : null;
         
-        // Jika update, nim tidak perlu diambil dari POST
         if ($id_keanggotaan) {
             $status = $_POST['status'];
             $id_periode = $_POST['id_periode'];
-            $tanggal_bergabung = $_POST['tanggal_bergabung'];
             
             // Update
             $query = "UPDATE keanggotaan_ukm 
-                     SET status = ?, id_periode = ?, tanggal_bergabung = ?
+                     SET status = ?, id_periode = ?
                      WHERE id_keanggotaan = ? AND id_ukm = ?";
-            $params = [$status, $id_periode, $tanggal_bergabung, $id_keanggotaan, $id_ukm];
+            $params = [$status, $id_periode, $id_keanggotaan, $id_ukm];
             $message = 'Data anggota berhasil diupdate';
         } else {
-            // Untuk insert baru, ambil nim dari POST
             $nim = $_POST['nim'];
             $status = $_POST['status'];
             $id_periode = $_POST['id_periode'];
-            $tanggal_bergabung = $_POST['tanggal_bergabung'];
             
             // Insert
             $query = "INSERT INTO keanggotaan_ukm 
-                     (nim, id_ukm, status, id_periode, tanggal_bergabung)
-                     VALUES (?, ?, ?, ?, ?)";
-            $params = [$nim, $id_ukm, $status, $id_periode, $tanggal_bergabung];
+                     (nim, id_ukm, status, id_periode)
+                     VALUES (?, ?, ?, ?)";
+            $params = [$nim, $id_ukm, $status, $id_periode];
             $message = 'Anggota baru berhasil ditambahkan';
         }
         
@@ -200,4 +196,4 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
         jsonResponse('error', $e->getMessage());
     }
 }
-?>
+?>  

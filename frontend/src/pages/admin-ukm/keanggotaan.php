@@ -91,7 +91,6 @@ if (!isset($_SESSION['id_ukm'])) {
                                                 <th>Program Studi</th>
                                                 <th>Status</th>
                                                 <th>Periode</th>
-                                                <th>Tanggal Bergabung</th>
                                                 <th>Aksi</th>
                                             </tr>
                                         </thead>
@@ -109,50 +108,46 @@ if (!isset($_SESSION['id_ukm'])) {
 
         <!-- Modal Add/Edit -->
         <div class="modal fade" id="modal-form">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title" id="modal-title">Tambah Anggota</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <form id="form-keanggotaan">
-                        <input type="hidden" id="id_keanggotaan" name="id_keanggotaan">
-                        <input type="hidden" name="id_ukm" value="<?php echo $_SESSION['id_ukm']; ?>">
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label for="nim">NIM</label>
-                                <select class="form-control" id="nim" name="nim" required>
-                                    <option value="">Pilih Mahasiswa</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Status</label>
-                                <select class="form-control" id="status" name="status" required>
-                                    <option value="anggota">Anggota</option>
-                                    <option value="pengurus">Pengurus</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Periode</label>
-                                <select class="form-control" id="id_periode" name="id_periode" required>
-                                    <option value="">Pilih Periode</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Tanggal Bergabung</label>
-                                <input type="date" class="form-control" id="tanggal_bergabung" name="tanggal_bergabung" required>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
-                            <button type="submit" class="btn btn-primary">Simpan</button>
-                        </div>
-                    </form>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modal-title">Tambah Anggota</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
+                <form id="form-keanggotaan">
+                    <input type="hidden" id="id_keanggotaan" name="id_keanggotaan">
+                    <input type="hidden" name="id_ukm" value="<?php echo $_SESSION['id_ukm']; ?>">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="nim">NIM</label>
+                            <select class="form-control" id="nim" name="nim" required>
+                                <option value="">Pilih Mahasiswa</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select class="form-control" id="status" name="status" required>
+                                <option value="anggota">Anggota</option>
+                                <option value="pengurus">Pengurus</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Periode</label>
+                            <select class="form-control" id="id_periode" name="id_periode" required>
+                                <option value="">Pilih Periode</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </form>
             </div>
         </div>
+    </div>
 
         <!-- Footer -->
         <footer class="main-footer">
