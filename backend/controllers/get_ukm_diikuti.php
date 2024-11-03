@@ -20,7 +20,7 @@ try {
               FROM keanggotaan_ukm ku
               JOIN ukm u ON ku.id_ukm = u.id_ukm
               JOIN periode_kepengurusan pk ON ku.id_periode = pk.id_periode
-              WHERE ku.nim = :nim";
+              WHERE ku.nim = :nim AND pk.status = 'aktif'";
 
     $stmt = $pdo->prepare($query);
     $stmt->execute(['nim' => $nim]);

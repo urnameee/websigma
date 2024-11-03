@@ -9,11 +9,10 @@
 </head>
 <body>
     <div id="navbar"></div>
-
     <div class="cover-container">
         <img src="/frontend/public/assets/profile3.png" alt="Cover Image" class="cover-image">
     </div>
-    
+   
     <div class="profile-section">
         <div class="profile-content">
             <div class="profile-image-container">
@@ -23,44 +22,41 @@
                 <h1 class="profile-name" id="profileName">Loading...</h1>
                 <p class="profile-nim" id="profileNim">Loading...</p>
             </div>
-
-            <!-- UKM Box Section -->
+            
+            <!-- UKM Aktif -->
             <div class="ukm-box">
-                <h2 class="ukm-title">Daftar UKM</h2>
-                <div class="card-container">
-                    <!-- Card 1 -->
-                    <div class="card">
-                        <img src="/frontend/public/assets/logo-bem.png" alt="Logo 1">
-                        <div class="card-content">
-                            <h2 class="card-title">Politeknik Computer Club</h2>
-                            <p class="card-description">Anggota Aktif periode 2024/2025</p>
-                        </div>
-                    </div>
-
-                    <!-- Card 2 -->
-                    <div class="card">
-                        <img src="/frontend/public/assets/logo-pcc.png" alt="Logo 2">
-                        <div class="card-content">
-                            <h2 class="card-title">Pengembangan Pengetahuan</h2>
-                            <p class="card-description">Ketua UKM periode 2024/2025</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Add more cards as needed -->
+                <h2 class="ukm-title">UKM yang Sedang Diikuti</h2>
+                <div class="card-container" id="ukmAktifContainer">
+                    <p class="loading-text">Loading...</p>
                 </div>
-                <!-- Logout Button -->
+            </div>
+
+            <!-- Histori UKM -->
+            <div class="ukm-box">
+                <h2 class="ukm-title">Riwayat UKM</h2>
+                <div class="card-container" id="ukmHistoriContainer">
+                    <p class="loading-text">Loading...</p>
+                </div>
+            </div>
+
+            <!-- UKM yang Sedang Didaftar -->
+            <div class="ukm-box">
+                <h2 class="ukm-title">UKM yang Sedang Didaftar</h2>
+                <div class="card-container" id="ukmPendaftaranContainer">
+                    <p class="info-text">Tidak ada UKM yang sedang didaftar</p>
+                </div>
+            </div>
+
+            <!-- Logout Button -->
             <div class="logout-container">
                 <button onclick="logout()" class="logout-button">Logout</button>
             </div>
-            </div>
-
         </div>
     </div>
 
     <script src="/frontend/src/utils/navbar/navbar.js"></script>
-
     <script src="/frontend/src/pages/user/js/logout.js"></script>
     <script src="/frontend/src/pages/user/js/auth.js"></script>
-    <script></script>
+    <script src="/frontend/src/pages/user/js/profile.js"></script>
 </body>
 </html>
